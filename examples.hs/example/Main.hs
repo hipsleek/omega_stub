@@ -1,3 +1,5 @@
+{- $Id $ -}
+
 module Main(main) where
 import Omega_stub
 import Foreign
@@ -19,7 +21,7 @@ main = do
        l_str <- newCString "l"
        n <- free_var_decl0 n_str
        m <- free_var_decl0 m_str
-       l <- free_var_decl0 l_str
+       l <- free_var_decl1 l_str 1
 
        local_n <- relation_get_local_global1 r n
        local_m <- relation_get_local_global1 r m

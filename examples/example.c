@@ -1,5 +1,5 @@
 /*
- * $Id: example.c,v 1.4 2003-05-25 02:48:07 raz Exp $
+ * $Id: example.c,v 1.5 2003-06-17 10:20:15 raz Exp $
  */
 
 //#include <presburger.h>
@@ -39,7 +39,7 @@ int main ()
   //  Free_Var_Decl l ("L", 1);
   Free_Var_Decl* n = free_var_decl0("n");
   Free_Var_Decl* m = free_var_decl0("m");
-  Free_Var_Decl* l = free_var_decl0("l");
+  Free_Var_Decl* l = free_var_decl1("l", 1);
 
   //  Variable_ID local_n = R.get_local (&n);
   //  Variable_ID local_m = R.get_local (&m);
