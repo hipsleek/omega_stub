@@ -1,7 +1,7 @@
 ---
 -- This is an example using the new Omega module.
 --
--- $Id: Main.hs,v 1.2 2003-07-22 11:19:57 raz Exp $
+-- $Id: Main.hs,v 1.3 2003-07-28 05:11:02 raz Exp $
 --
 
 -- R1 := { [i] -> [j] : j = i + 1 };
@@ -15,6 +15,7 @@
 module Main(main) where
 
 import Omega
+import Omega_types
 import Foreign
 import Foreign.C
 import qualified Omega_stub
@@ -62,8 +63,8 @@ main = do
     Omega_stub.relation_print ptr_r3
     Omega_stub.query_experiment ptr_r3
 
-    rf3' <- extract_formula_from_set ptr_r3
-    putStr ((show rf3') ++ "\n")
+--    rf3' <- extract_formula_from_set ptr_r3
+--    putStr ((show rf3') ++ "\n")
 
     putStr "[DONE]\n"
 

@@ -1,12 +1,13 @@
 ---
 -- This is an example using the new Omega module.
 --
--- $Id: Main.hs,v 1.3 2003-07-04 03:42:22 raz Exp $
+-- $Id: Main.hs,v 1.4 2003-07-28 05:12:05 raz Exp $
 --
 
 module Main(main) where
 
 import Omega
+import Omega_types
 import Foreign
 import Foreign.C
 import qualified Omega_stub

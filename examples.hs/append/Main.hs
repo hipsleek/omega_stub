@@ -1,7 +1,7 @@
 ---
 -- Fix point for "append"
 --
--- $Id: Main.hs,v 1.1 2003-07-10 06:51:02 raz Exp $
+-- $Id: Main.hs,v 1.2 2003-07-28 05:10:59 raz Exp $
 --
 
 
@@ -23,6 +23,7 @@
 module Main(main) where
 
 import Omega
+import Omega_types
 import Foreign
 import Foreign.C
 import qualified Omega_stub
