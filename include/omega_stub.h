@@ -1,5 +1,5 @@
 /*
- * $Id: omega_stub.h,v 1.8 2003-07-22 07:52:34 raz Exp $
+ * $Id: omega_stub.h,v 1.9 2003-07-28 05:12:36 raz Exp $
  */
 
 #ifndef _OMEGA_STUB_H
@@ -90,6 +90,7 @@ extern "C" {
   void relation_print_with_subs_to_file(Relation* r, FILE* output_file, bool printSym);
   const char* relation_print_with_subs_to_string(Relation* r, bool printSym);
   const char* relation_print_formula_to_string(Relation* r);
+  const char* relation_print_outputs_with_subs_to_string(Relation* r);
 
   // simplification and satisfiability
   bool is_upper_bound_satisfiable(Relation* r);
