@@ -1,4 +1,4 @@
-{- $Id: Omega_stub.hs,v 1.6 2003-07-28 05:16:32 raz Exp $ -}
+{- $Id: Omega_stub.hs,v 1.7 2003-07-28 09:49:19 raz Exp $ -}
 
 module Omega_stub where
 
@@ -108,6 +108,7 @@ foreign import ccall constraint_handler_update_coef :: (Ptr Constraint_Handle) -
 
 foreign import ccall relation_print :: (Ptr Relation) -> IO ()
 foreign import ccall relation_print_to_file :: (Ptr Relation) -> CInt -> (Ptr CFile) -> IO ()
+foreign import ccall relation_print_to_string :: (Ptr Relation) -> IO (CString)
 foreign import ccall relation_print_with_subs :: (Ptr Relation) -> Bool -> IO ()
 foreign import ccall relation_print_with_subs_to_file :: (Ptr Relation) -> (Ptr CFile) -> Bool -> IO ()
 foreign import ccall relation_print_with_subs_to_string :: (Ptr Relation) -> Bool -> IO (CString)
