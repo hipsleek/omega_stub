@@ -1,5 +1,5 @@
 /*
- * $Id: omega_stub.cpp,v 1.8 2003-07-22 07:52:39 raz Exp $
+ * $Id: omega_stub.cpp,v 1.9 2003-07-28 05:14:27 raz Exp $
  */
 
 #include <omega.h>
@@ -7,6 +7,7 @@
 #include "../include/util.h"
 
 #include <stdio.h>
+#include <string.h>
 
 Relation* relation_new0()
 {
@@ -97,17 +98,17 @@ bool relation_is_set(Relation* r)
 
 int relation_n_inp(Relation* r)
 {
-  return r->is_set();
+  return r->n_inp();
 }
 
 int relation_n_out(Relation* r)
 {
-  return r->is_set();
+  return r->n_out();
 }
 
 int relation_n_set(Relation* r)
 {
-  return r->is_set();
+  return r->n_set();
 }
 
 
@@ -305,13 +306,13 @@ void relation_print_to_file(Relation* r, FILE* output_file)
 
 void relation_print_with_subs_to_file(Relation* r, FILE* output_file, bool printSym)
 {
-  r->print_with_subs(output_file, printSym);
+  r->print_with_subs(output_file, printSym, false);  // no \n ar the end
 }
 
 
 const char* relation_print_with_subs_to_string(Relation* r, bool printSym)
 {
-  return r->print_with_subs_to_string(printSym);
+  return strdup(r->print_with_subs_to_string(printSym, false));  // no \n ar the end
 }
 
 void relation_print_with_subs(Relation* r, bool printSym)
@@ -321,7 +322,12 @@ void relation_print_with_subs(Relation* r, bool printSym)
 
 const char* relation_print_formula_to_string(Relation* r)
 {
-  return r->print_formula_to_string();
+  return strdup(r->print_formula_to_string());
+}
+
+const char* relation_print_outputs_with_subs_to_string(Relation* r)
+{
+  return strdup(r->print_outputs_with_subs_to_string());
 }
 
 
