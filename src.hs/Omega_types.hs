@@ -28,6 +28,8 @@ data Update = Coef Variable Int
 type Variable = (Variable_name, Ptr Omega_stub.Variable)
 
 type Variable_name = String
+data HeadVariable = HeadString String
+  | HeadInt Int
 
 instance Show Update where
     show (Const i) = show i

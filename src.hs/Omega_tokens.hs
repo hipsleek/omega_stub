@@ -26,4 +26,6 @@ data Token
 	| TokenOr
 	| TokenComma
 	| TokenSColon
+	| TokenTrue
+	| TokenFalse
 	deriving Show
