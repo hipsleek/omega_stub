@@ -1,4 +1,22 @@
+2003-07-10  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
+
+	* examples.hs/append/Main.hs, examples.hs/append/Makefile:
+	fix-point for append
+
+	* include/omega_stub.h: add relation_copy
+	add relation_is_set, relation_n_inp, relation_n_out, relation_n_set
+	add some unimplemented iterator functions
+
+	* src/omega_stub.cpp: add relation_copy
+	add relation_is_set, relation_n_inp, relation_n_out, relation_n_set
+
+	* src.hs/Omega.hs: Arith_minus is now part of the Arith_plus
+	add minus_update
+	add more instances of Arith_q
+
 2003-07-07  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
+
+	* ChangeLog: regular update
 
 	* examples.hs/example/Main.hs:
 	small on relation_print_with_subs_to_string call
@@ -119,7 +137,7 @@
 2003-05-12  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
 
 	* src.hs/Makefile, src.hs/Omega.hs, src.hs/README, src/Makefile, src/omega_stub.cpp, include/omega_stub.h, include/omega_stub_types.h, examples/Makefile, examples/example.c, examples/library_example.c, Makefile, Makefile.rules:
-	adding of $Id: ChangeLog,v 1.9 2003-07-07 04:28:28 raz Exp $ to most of the files
+	adding of $Id: ChangeLog,v 1.10 2003-07-10 06:52:52 raz Exp $ to most of the files
 
 	* src.hs/Omega.hs:
 	Omega.hs's hierarchy change from classes to data's(after a talk with Dana Xu Na)
