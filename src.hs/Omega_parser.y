@@ -13,7 +13,7 @@ replace_var_in_formula v1_name v2 (Not f) = Not (replace_var_in_formula v1_name 
 replace_var_in_formula v1_name v2 (Exists f) = Exists (\v -> (replace_var_in_formula v1_name v2 (f v)))
 replace_var_in_formula v1_name v2 (Forall f) = Forall (\v -> (replace_var_in_formula v1_name v2 (f v)))
 replace_var_in_formula v1_name v2 (Geq us) = Geq (map (replace_var_in_update v1_name v2) us)
-replace_var_in_formula v1_name v2 (Eq us) = Geq (map (replace_var_in_update v1_name v2) us)
+replace_var_in_formula v1_name v2 (Eq us) = Eq (map (replace_var_in_update v1_name v2) us)
 replace_var_in_formula v1_name v2 (Stride i us) = Stride i (map (replace_var_in_update v1_name v2) us)
 
 replace_var_in_update :: Variable_name -> Variable -> Update -> Update
@@ -30,7 +30,7 @@ replace_vars_in_rformula [] rf = rf
 replace_vars_in_rformula (v_name:v_names) rf = RFormula (\v -> (replace_var_in_rformula v_name v (replace_vars_in_rformula v_names rf)))
 
 }
-%name omega_parse
+%name omega_parser
 %tokentype { Token }
 %token 
 	exists		{ TokenExists }
@@ -110,5 +110,5 @@ Expr : Expr '+' Expr { $1 ++ $3 }
 happyError tokens = error ("Parse error" ++ (show tokens))
 
 extract_rformula :: String -> RFormula
-extract_rformula = omega_parse . lexer
+extract_rformula = omega_parser . omega_lexer
 }
