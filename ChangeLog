@@ -1,3 +1,9 @@
+2003-05-10  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
+
+	* src/omega_stub.cpp, include/omega_stub.:
+	relation_cons{0|1|2} renamed to relation_new{0|1|2} relation_delete added
+
+
 2003-05-06  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
 
 	* Makefile, Makefile.rules, examples/Makefile, examples/PT-example.c, examples/example.c, examples/library_example.c, include/omega_stub.h, include/omega_stub_types.h, src/Makefile, src/omega_stub.cpp:
