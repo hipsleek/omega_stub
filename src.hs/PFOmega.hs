@@ -13,6 +13,7 @@ simplify (ins1,outs1,rf1) =
   build_relation(ins1,outs1,rf1) >>= \(ptr_r1,f1) ->
   eval_relation ptr_r1 f1 >>
   Omega_stub.relation_simplify3 ptr_r1 2 4 >> --what is the meaning of 2 and 4???? (2 and 4 are used in Omega parser.y)
+--  Omega_stub.relation_simplify3 ptr_r1 1 1 >> 
   relation_extract_rformula ptr_r1 >>= \rf ->
   return rf
 
