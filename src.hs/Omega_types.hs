@@ -35,7 +35,6 @@ instance Show Update where
     show (Coef (v_name,_) (- 1)) = "(-"++ v_name ++ ")"
     show (Coef (v_name,_) i) = (show i) ++ "*" ++ v_name
 
-
 instance Show Formula where
     show (And c) = let show_vec :: [Formula] -> String
 		       show_vec [] = show "--void--"
@@ -66,7 +65,45 @@ instance Show Formula where
 
 instance Show RFormula where
     show (Formula f) = "(F) . " ++ show f
-    show (RFormula r) = "[*] . " ++ show (r ("[*]", nullPtr))
+    show rf = let (str, _) = (omega_show rf 1)
+	      in str
+
+class Omega_Show a where
+    omega_show :: a -> Int -> (String, Int)
+
+instance Omega_Show RFormula where
+    omega_show (Formula f) vari = let (str', vari') = omega_show f vari
+				  in ("(F) . " ++ str', vari')
+    omega_show (RFormula r) vari = let (str', vari') = omega_show (r (("_" ++ (show vari)), nullPtr)) (vari + 1)
+				   in ("[_" ++ (show vari) ++ "] . " ++ str', vari')
+
+instance Omega_Show Formula where
+    omega_show (And c) vari = let show_vec :: [Formula] -> Int -> (String, Int)
+				  show_vec [] vari = (show "--void--", vari)
+				  show_vec [c] vari = omega_show c vari
+				  show_vec (c:cs) vari = let (str', vari') = omega_show c vari
+							     (str'', vari'') = show_vec cs vari'
+							 in (str' ++ " && " ++ str'', vari'')
+				  (str', vari')= show_vec c vari
+			      in ("(" ++ str' ++ ")", vari')
+    omega_show (Or c) vari = let show_vec :: [Formula] -> Int -> (String, Int)
+				 show_vec [] vari = ((show "--void--"), vari)
+				 show_vec [c] vari = (omega_show c vari)
+				 show_vec (c:cs) vari = let (str', vari') = omega_show c vari
+				       			    (str'', vari'') = show_vec cs vari'
+							in (str' ++ " || " ++ str'', vari'')
+				 (str', vari')= show_vec c vari
+			      in ("(" ++ str' ++ ")", vari')
+    omega_show (Not c) vari = let (str', vari') = omega_show c vari
+			      in ("(! " ++ str' ++ ")", vari')
+    omega_show (Exists f) vari = let (str', vari') = omega_show (f (("_" ++ (show vari)), nullPtr)) (vari + 1)
+			         in ("\\exists _" ++ (show vari) ++ " . " ++ str', vari')
+    omega_show (Forall f) vari = let (str', vari') = omega_show (f (("_" ++ (show vari)), nullPtr)) (vari + 1)
+			         in ("\\forall _" ++ (show vari) ++ " . " ++ str', vari')
+    omega_show (Geq u) vari = (show (Geq u), vari)
+    omega_show (Eq u) vari = (show (Eq u), vari)
+    omega_show (Stride i u) vari = (show (Stride i u), vari)
+    
 
 --instance Show (Variable -> RFormula) where
 --    show f = show (f ("_", nullPtr))
@@ -76,11 +113,6 @@ instance Show RFormula where
 
 --instance Show Variable where
 --    show (var_name, var_ptr) = show var_name
-
-
-eval_RFormula :: [String] -> RFormula -> String
-eval_RFormula _ (Formula f) = show f
-eval_RFormula (var:vars) (RFormula rf) = eval_RFormula vars (rf (var, nullPtr))
 
 -- experimental stuff
 
