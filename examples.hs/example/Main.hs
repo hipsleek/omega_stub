@@ -57,8 +57,8 @@ main = do
        e <- f_and_add_exists s_root
 
        z_str <- newCString "z"
-       z <- f_declare e z_str
-       z_stuff <- f_and_add_and e
+       z <- f_exists_declare e z_str
+       z_stuff <- f_exists_add_and e
 
        zmin <- f_and_add_GEQ z_stuff
        constraint_handler_update_coef zmin z 1
@@ -69,11 +69,11 @@ main = do
        constraint_handler_update_coef zmax z (-1)
 
        o <- f_and_add_or z_stuff
-       o8_and <- f_and_add_and o
+       o8_and <- f_or_add_and o
        z8 <- f_and_add_stride o8_and 8
        constraint_handler_update_coef z8 z 1
 
-       o12_and <- f_and_add_and o
+       o12_and <- f_or_add_and o
        z12 <- f_and_add_stride o12_and 12
        constraint_handler_update_coef z12 z 1
        constraint_handler_update_coef z12 x 5
