@@ -10,6 +10,8 @@ data Token
 	| TokenEq
 	| TokenGeq
 	| TokenLeq
+	| TokenGT
+	| TokenLT
 	| TokenPlus
 	| TokenMinus
 	| TokenTimes
