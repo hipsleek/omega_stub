@@ -1,5 +1,5 @@
 /*
- * $Id: example.c,v 1.2 2003-05-12 11:38:36 raz Exp $
+ * $Id: example.c,v 1.3 2003-05-16 12:43:16 raz Exp $
  */
 
 //#include <presburger.h>
@@ -45,8 +45,8 @@ int main ()
   //  Variable_ID local_m = R.get_local (&m);
   //  Variable_ID l_in = R.get_local (&l, Input_Tuple);
   //  Variable_ID l_out = R.get_local (&l, Output_Tuple);
-  Variable_ID local_n = relation_get_local1(R, n);
-  Variable_ID local_m = relation_get_local1(R, m);
+  Variable_ID local_n = relation_get_local_global1(R, n);
+  Variable_ID local_m = relation_get_local_global1(R, m);
   Variable_ID l_in = relation_get_local_global2(R, l, Input_Tuple);
   Variable_ID l_out = relation_get_local_global2(R, l, Output_Tuple);
 
@@ -79,7 +79,7 @@ int main ()
   //  xmax.update_coef (S.get_local (&n), 1);
   GEQ_Handle xmax = f_and_add_GEQ(S_root);
   constraint_handler_update_coef(xmax, x, -1);
-  constraint_handler_update_coef(xmax, relation_get_local1(S, n), 1);
+  constraint_handler_update_coef(xmax, relation_get_local_global1(S, n), 1);
   
   //  GEQ_Handle ymax = S_root->add_GEQ ();	// x+5-y >= 0
   //  ymax.update_coef (x, 1);
