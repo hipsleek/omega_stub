@@ -1,7 +1,16 @@
 2003-05-12  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
 
+	* src.hs/Makefile, src.hs/Omega.hs, src.hs/README, src/Makefile, src/omega_stub.cpp, include/omega_stub.h, include/omega_stub_types.h, examples/Makefile, examples/example.c, examples/library_example.c, Makefile, Makefile.rules:
+	adding of $Id: ChangeLog,v 1.4 2003-05-12 11:50:39 raz Exp $ to most of the files
+
+	* src.hs/Omega.hs:
+	Omega.hs's hierarchy change from classes to data's(after a talk with Dana Xu Na)
+
+	* ChangeLog: ChangeLog update
+
 	* src.hs/Makefile, src.hs/Omega.hs:
 	start of Omega library development in Haskell
+
 
 2003-05-11  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
 
