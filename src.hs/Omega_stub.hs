@@ -1,4 +1,4 @@
-{- $Id: Omega_stub.hs,v 1.2 2003-06-23 09:56:19 raz Exp $ -}
+{- $Id: Omega_stub.hs,v 1.3 2003-07-04 03:56:59 raz Exp $ -}
 
 module Omega_stub where
 
@@ -87,24 +87,30 @@ foreign import ccall f_exists_add_not :: (Ptr F_Exists) -> IO (Ptr F_Not)
 foreign import ccall f_exists_add_forall :: (Ptr F_Exists) -> IO (Ptr F_Forall)
 foreign import ccall f_exists_add_exists :: (Ptr F_Exists) -> IO (Ptr F_Exists)
 
---foreign import ccall f_declare :: (F_Declaration f) => (Ptr f) -> CString -> IO (Variable_ID)
 foreign import ccall f_forall_declare :: (Ptr F_Forall) -> CString -> IO (Ptr Variable)
 foreign import ccall f_exists_declare :: (Ptr F_Exists) -> CString -> IO (Ptr Variable)
 
---foreign import ccall constraint_handler_update_const :: (Constraint_Handle ch) => (Ptr ch) -> CInt -> IO ()
---foreign import ccall constraint_handler_update_coef :: (Constraint_Handle ch) => (Ptr ch) -> CInt -> IO ()
 foreign import ccall constraint_handler_update_const :: (Ptr Constraint_Handle) -> CInt -> IO ()
 foreign import ccall constraint_handler_update_coef :: (Ptr Constraint_Handle) -> (Ptr Variable) -> CInt -> IO ()
 
 foreign import ccall relation_print :: (Ptr Relation) -> IO ()
-foreign import ccall relation_print_file :: (Ptr Relation) -> CInt -> (Ptr CFile) -> IO ()
-foreign import ccall relation_print_with_subs :: (Ptr Relation) -> CInt -> (Ptr CFile) -> CInt -> IO ()
---foreign import ccall relation_print_with_subs_to_string :: (Ptr Relation) -> CInt -> IO (CString)
---foreign import ccall relation_print_formula_to_string :: (Ptr Relation) -> IO (CString)
+foreign import ccall relation_print_to_file :: (Ptr Relation) -> CInt -> (Ptr CFile) -> IO ()
+foreign import ccall relation_print_with_subs_to_file :: (Ptr Relation) -> CInt -> (Ptr CFile) -> CInt -> IO ()
+foreign import ccall relation_print_with_subs_to_string :: (Ptr Relation) -> CInt -> IO (CString)
+foreign import ccall relation_print_formula_to_string :: (Ptr Relation) -> IO (CString)
+
+-- binary relational operators
+
+foreign import ccall union_relation :: (Ptr Relation) -> (Ptr Relation) -> IO (Ptr Relation)
+foreign import ccall intersection :: (Ptr Relation) -> (Ptr Relation) -> IO (Ptr Relation)
+foreign import ccall composition :: (Ptr Relation) -> (Ptr Relation) -> IO (Ptr Relation)
+foreign import ccall join :: (Ptr Relation) -> (Ptr Relation) -> IO (Ptr Relation)
+foreign import ccall restrict_domain :: (Ptr Relation) -> (Ptr Relation) -> IO (Ptr Relation)
+foreign import ccall restrict_range :: (Ptr Relation) -> (Ptr Relation) -> IO (Ptr Relation)
+foreign import ccall difference :: (Ptr Relation) -> (Ptr Relation) -> IO (Ptr Relation)
+foreign import ccall cross_product :: (Ptr Relation) -> (Ptr Relation) -> IO (Ptr Relation)
+foreign import ccall gist :: (Ptr Relation) -> (Ptr Relation) -> IO (Ptr Relation)
 
 foreign import ccall free_var_decl0 :: CString -> IO (Ptr Variable)
 foreign import ccall free_var_decl1 :: CString -> CInt -> IO (Ptr Variable)
-
-
-
 

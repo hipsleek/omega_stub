@@ -1,5 +1,5 @@
 /*
- * $Id: omega_stub.cpp,v 1.4 2003-06-23 09:57:02 raz Exp $
+ * $Id: omega_stub.cpp,v 1.5 2003-07-04 03:54:28 raz Exp $
  */
 
 #include <omega.h>
@@ -264,27 +264,27 @@ void relation_print(Relation* r)
   r->print();
 }
 
-void relation_print_file(Relation* r, FILE* output_file)
+void relation_print_to_file(Relation* r, FILE* output_file)
 {
   r->print(output_file);
 }
 
-void relation_print_with_subs(Relation* r, FILE* output_file, bool printSym)
+void relation_print_with_subs_to_file(Relation* r, FILE* output_file, bool printSym)
 {
   r->print_with_subs(output_file, printSym);
 }
 
-/*
-char* relation_print_with_subs_to_string(Relation* r, bool printSym)
+
+const char* relation_print_with_subs_to_string(Relation* r, bool printSym)
 {
   return r->print_with_subs_to_string(printSym);
 }
 
-char* relation_print_formula_to_string(Relation* r)
+const char* relation_print_formula_to_string(Relation* r)
 {
   return r->print_formula_to_string();
 }
-*/
+
 
 Free_Var_Decl* free_var_decl0(char* name)
 {
@@ -294,4 +294,69 @@ Free_Var_Decl* free_var_decl0(char* name)
 Free_Var_Decl* free_var_decl1(char* name, int arity)
 {
   return new Free_Var_Decl(name, arity);
+}
+
+// binary relational operators
+
+Relation* union_relation(Relation *r1, Relation *r2)
+{
+  Relation* r = new Relation();
+  *r = Union(*r1, *r2);
+  return r;
+}
+
+Relation* intersection(Relation *r1, Relation *r2)
+{
+  Relation* r = new Relation();
+  *r = Intersection(*r1, *r2);
+  return r;
+}
+
+Relation* composition(Relation *r1, Relation *r2)
+{
+  Relation* r = new Relation();
+  *r = Composition(*r1, *r2);
+  return r;
+}
+
+Relation* join(Relation *r1, Relation *r2)
+{
+  Relation* r = new Relation();
+  *r = Join(*r1, *r2);
+  return r;
+}
+
+Relation* restrict_domain(Relation *r1, Relation *r2)
+{
+  Relation* r = new Relation();
+  *r = Restrict_Domain(*r1, *r2);
+  return r;
+}
+
+Relation* restrict_range(Relation *r1, Relation *r2)
+{
+  Relation* r = new Relation();
+  *r = Restrict_Range(*r1, *r2);
+  return r;
+}
+
+Relation* difference(Relation *r1, Relation *r2)
+{
+  Relation* r = new Relation();
+  *r = Difference(*r1, *r2);
+  return r;
+}
+
+Relation* cross_product(Relation *r1, Relation *r2)
+{
+  Relation* r = new Relation();
+  *r = Cross_Product(*r1, *r2);
+  return r;
+}
+
+Relation* gist(Relation *r1, Relation *r2)
+{
+  Relation* r = new Relation();
+  *r = Gist(*r1, *r2);
+  return r;
 }
