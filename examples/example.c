@@ -1,5 +1,5 @@
 /*
- * $Id: example.c,v 1.3 2003-05-16 12:43:16 raz Exp $
+ * $Id: example.c,v 1.4 2003-05-25 02:48:07 raz Exp $
  */
 
 //#include <presburger.h>
@@ -113,8 +113,8 @@ int main ()
   //  zmax.update_coef (x, 1);
   //  zmax.update_coef (z, -1);
   GEQ_Handle zmax = f_and_add_GEQ(z_stuff);
-  constraint_handler_update_coef(zmax, z, 1);
-  constraint_handler_update_coef(zmax, y, -1);
+  constraint_handler_update_coef(zmax, x, 1);
+  constraint_handler_update_coef(zmax, z, -1);
 
   //  F_Or *o = z_stuff->add_or ();
   //  Stride_Handle z8 = o->add_and ()->add_stride (8);
