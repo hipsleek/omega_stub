@@ -1,5 +1,28 @@
 2003-07-28  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
 
+	* examples.hs/append/Main.hs: rewrite using the new functions
+
+	* src.hs/Omega_parser.y:
+	move exists and forall from Formulas to Formula; Vars small update
+
+	* examples.hs/happy/Main.hs, examples.hs/happy/Makefile, examples.hs/happy/Omega_lexer.hs, examples.hs/happy/Omega_parser.y, examples.hs/happy/Omega_tokens.hs:
+	small enhance
+
+	* src.hs/Omega_types.hs: revert to hand made instances of Show
+
+	* src/omega_stub.cpp, src.hs/Omega_stub.hs:
+	add relation_print_to_string
+
+	* src.hs/Omega_parser.y, src.hs/Omega_lexer.hs: lexer -> omega_lexer
+
+	* src.hs/Omega.hs: add relation_extract_rformula
+
+	* include/omega_stub.h: add relation_print_to_string
+
+	* examples.hs/example2/Main.hs: testing some parser settings
+
+	* ChangeLog: regular update
+
 	* src.hs/Makefile, src.hs/Omega_lexer.hs, src.hs/Omega_parser.y, src.hs/Omega_stub.hs, src.hs/Omega_tokens.hs:
 	add parser for Omega formulas
 
@@ -196,7 +219,7 @@
 2003-05-12  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
 
 	* src.hs/Makefile, src.hs/Omega.hs, src.hs/README, src/Makefile, src/omega_stub.cpp, include/omega_stub.h, include/omega_stub_types.h, examples/Makefile, examples/example.c, examples/library_example.c, Makefile, Makefile.rules:
-	adding of $Id: ChangeLog,v 1.11 2003-07-28 05:20:51 raz Exp $ to most of the files
+	adding of $Id: ChangeLog,v 1.12 2003-07-28 15:58:42 raz Exp $ to most of the files
 
 	* src.hs/Omega.hs:
 	Omega.hs's hierarchy change from classes to data's(after a talk with Dana Xu Na)
