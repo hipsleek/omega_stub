@@ -1,3 +1,50 @@
+2003-07-07  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
+
+	* examples.hs/example/Main.hs:
+	small on relation_print_with_subs_to_string call
+
+	* src.hs/Omega_stub.hs, include/omega_stub.h, src/omega_stub.cpp:
+	add new functions for more printing, simplification and satisfiability, upper and lower bounds, binary relational operators, unary relation operations, hull operation and relational function that return boolean values
+
+	* src.hs/Omega.hs: add a new instance of Arith_plus
+
+2003-07-04  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
+
+	* src.hs/Omega_stub.hs:
+	add more printing and new binary relational operators
+
+	* src.hs/Omega.hs: update build_relation
+
+	* src.hs/Makefile: add GHCFLAGS
+
+	* src/omega_stub.cpp:
+	add more printing and new binary relational operators
+
+	* include/omega_stub.h:
+	add new prototipes for more printing, simplification and satisfiability, upper and lower bounds, binary relational operators, unary relation operations, hull operation and relational function that return boolean values
+
+	* examples.hs/myexample/Main.hs: change the build_relation definition
+
+2003-07-03  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
+
+	* examples.hs/example/Main.hs:
+	testing relation_print_with_subs_to_string
+
+	* examples/example.c: testing print_with_subs_to_string
+
+	* ChangeLog: late regular update
+
+2003-06-28  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
+
+	* src.hs/Omega.hs: infix operators; still in progress :-(
+
+2003-06-27  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
+
+	* Makefile: add clean for examples.hs/myexample
+
+	* Makefile:
+	small corrections + add make for examples.hs/example and examples.hs/myexample
+
 2003-06-23  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
 
 	* src.hs/Omega.hs: a more mature Omega module
@@ -72,7 +119,7 @@
 2003-05-12  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
 
 	* src.hs/Makefile, src.hs/Omega.hs, src.hs/README, src/Makefile, src/omega_stub.cpp, include/omega_stub.h, include/omega_stub_types.h, examples/Makefile, examples/example.c, examples/library_example.c, Makefile, Makefile.rules:
-	adding of $Id: ChangeLog,v 1.8 2003-07-03 14:01:44 raz Exp $ to most of the files
+	adding of $Id: ChangeLog,v 1.9 2003-07-07 04:28:28 raz Exp $ to most of the files
 
 	* src.hs/Omega.hs:
 	Omega.hs's hierarchy change from classes to data's(after a talk with Dana Xu Na)
