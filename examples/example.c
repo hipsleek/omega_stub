@@ -1,5 +1,5 @@
 /*
- * $Id: example.c,v 1.5 2003-06-17 10:20:15 raz Exp $
+ * $Id: example.c,v 1.6 2003-06-23 09:57:42 raz Exp $
  */
 
 //#include <presburger.h>
@@ -99,7 +99,7 @@ int main ()
 
   //  Variable_ID z = e->declare ("z");	// exists z
   //  F_And *z_stuff = e->add_and ();
-  Variable_ID z = f_declare(e, "z");
+  Variable_ID z = f_exists_declare(e, "z");
   F_And* z_stuff = f_and_add_and(e);
 
   //  GEQ_Handle zmin = z_stuff->add_GEQ ();	// z-y >= 0
