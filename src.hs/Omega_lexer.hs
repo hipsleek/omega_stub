@@ -13,6 +13,8 @@ omega_lexer ('-':'>':cs) = TokenArrow : omega_lexer cs
 omega_lexer ('=':cs) = TokenEq : omega_lexer cs
 omega_lexer ('<':'=':cs) = TokenLeq : omega_lexer cs
 omega_lexer ('>':'=':cs) = TokenGeq : omega_lexer cs
+omega_lexer ('<':cs) = TokenLT : omega_lexer cs
+omega_lexer ('>':cs) = TokenGT : omega_lexer cs
 omega_lexer ('+':cs) = TokenPlus : omega_lexer cs
 omega_lexer ('-':cs) = TokenMinus : omega_lexer cs
 omega_lexer ('*':cs) = TokenTimes : omega_lexer cs
