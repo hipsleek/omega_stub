@@ -29,6 +29,14 @@ replace_vars_in_rformula :: [Variable_name] -> RFormula -> RFormula
 replace_vars_in_rformula [] rf = rf
 replace_vars_in_rformula (v_name:v_names) rf = RFormula (\v -> (replace_var_in_rformula v_name v (replace_vars_in_rformula v_names rf)))
 
+exists_vars_in_formula :: [Variable_name] -> Formula -> Formula
+exists_vars_in_formula [] f = f
+exists_vars_in_formula (v_name:v_names) f = Exists (\v -> (replace_var_in_formula v_name v (exists_vars_in_formula v_names f)))
+
+forall_vars_in_formula :: [Variable_name] -> Formula -> Formula
+forall_vars_in_formula [] f = f
+forall_vars_in_formula (v_name:v_names) f = Forall (\v -> (replace_var_in_formula v_name v (forall_vars_in_formula v_names f)))
+
 }
 %name omega_parser
 %tokentype { Token }
@@ -61,14 +69,14 @@ replace_vars_in_rformula (v_name:v_names) rf = RFormula (\v -> (replace_var_in_r
 %left '=' geq leq
 %left '+' '-'
 %left '*' '/'
+%left exists
 
 %%
-OFormula : '{' '[' Vars ']' arrow '[' Vars ']' Formulas '}' {
---  (show $3) ++ "->" ++ (show $7) ++ " : " ++ (show $9)
-  (replace_vars_in_rformula ($3 ++ $7) (Formula $9))
-}
+OFormula : '{' '[' Vars ']' arrow '[' Vars ']' Formulas '}' { (replace_vars_in_rformula ($3 ++ $7) (Formula $9)) }
+         | '{' '[' Vars ']' Formulas '}' { (replace_vars_in_rformula $3 (Formula $5)) }
 
-Vars : Vars ',' var { $3:$1}
+Vars :: { [Variable_name] }
+Vars : Vars ',' var { $1 ++ [$3]}
      | var          { [$1] }
 
 Formulas :: { Formula }
@@ -76,19 +84,20 @@ Formulas : OrFormulas       { Or $1 }
 	 | AndFormulas      { And $1 }
 	 | '(' Formulas ')' { $2 }
 	 | Formula          { And [$1] }
- 	 | exists '(' var ':' Formulas ')' { Exists (\v -> (replace_var_in_formula $3 v $5)) }
- 	 | forall '(' var ':' Formulas ')' { Forall (\v -> (replace_var_in_formula $3 v $5)) }
-	 | {- empty -}                     { And [] }
+	 | {- empty -}      { And [] }
 OrFormulas :: { [Formula] }
-OrFormulas : OrFormulas or Formula { $3:$1 }
-           | Formula or Formula { [$1,$3] }
+OrFormulas : OrFormulas or Formulas { $3:$1 }
+           | Formulas or Formulas { [$1,$3] }
 AndFormulas :: { [Formula] }
-AndFormulas : AndFormulas and Formula { $3:$1 }
-            | Formula and Formula     { [$1,$3] }
+AndFormulas : AndFormulas and Formulas { $3:$1 }
+            | Formulas and Formulas     { [$1,$3] }
 Formula :: { Formula }
 Formula : Eq         { Eq $1 }
 	| Geq        { Geq $1 }
 	| Leq        { Geq $1 }
+        | exists '(' Vars ':' Formulas ')' { (exists_vars_in_formula $3 $5) }
+ 	| forall '(' Vars ':' Formulas ')' { (forall_vars_in_formula $3 $5) }
+        | '(' Formula ')' { $2 }
 
 Eq :: { [Update] }
 Eq  : Expr '=' Expr  { $1 ++ (minus_update $3) }
