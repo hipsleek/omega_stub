@@ -1,8 +1,10 @@
 include ../../Makefile.rules
 
-all: example2
+PROG=example2
 
-example2: Main.hs
+all: $(PROG)
+
+qsort: Main.hs
 	ghc -fglasgow-exts -i../../lib.hs -lstdc++ $(LIBS) $(LIB) 	\
 		../../lib/omega_stub.o					\
 		../../lib/Exit.o					\
@@ -14,8 +16,7 @@ example2: Main.hs
 		../../lib.hs/Omega_lexer.o				\
 		../../lib.hs/Omega_parser.o				\
 		Main.hs							\
-		-o example2
+		-o $(PROG)
 
 clean:
-	rm -f *.hi *.o *~ example2
-
+	rm -f *.hi *.o *~ $(PROG)
