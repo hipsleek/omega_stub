@@ -1,3 +1,7 @@
+/*
+ * $Id: omega_stub.cpp,v 1.3 2003-05-12 11:38:38 raz Exp $
+ */
+
 #include <omega.h>
 #include "../include/omega_stub.h"
 

@@ -1,0 +1,22 @@
+Some things to remember:
+	./omega/pres_gen.h:typedef Var_Decl *Variable_ID;
+	./omega/pres_gen.h:typedef Global_Var_Decl *Global_Var_ID;
+
+From man hugs:
+
+C INTERFACE
+       On  the  x86,  PowerPC  and  Sparc architectures, Hugs
+implements the part of the Haskell 98 Foreign Function Interface (FFI)
+that allows Haskell functions to call C routines.  Modules containing
+such foreign declarations must be compiled using the ffihugs command
+with  the +G  option.   Additional arguments for the C compiler may be
+supplied with +L options.  For example, suppose you have some C
+functions in test.c and some FFI declarations for those functions in
+Test.hs and the code in test.c needs to be compiled with  -lm.   Then
+you  would compile the module with the command 
+
+              ffihugs +G +L"test.c" +L"-lm" Test.hs
+
+which generates an object file Test.so.  Then when hugs loads Test.hs,
+it will also load Test.so.
+

@@ -1,3 +1,7 @@
+/*
+ * $Id: omega_stub_types.h,v 1.2 2003-05-12 11:38:37 raz Exp $
+ */
+
 #ifndef _OMEGA_STUB_TYPES_H
 #define _OMEGA_STUB_TYPES_H
 

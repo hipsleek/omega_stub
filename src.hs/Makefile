@@ -1,4 +1,6 @@
-all: Omega.o
+all: lib
+
+lib: Omega.o
 
 Omega.o: Omega.hs
 	ghc -fglasgow-exts -c Omega.hs

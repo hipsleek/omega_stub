@@ -1,4 +1,8 @@
 /*
+ * $Id: library_example.c,v 1.2 2003-05-12 11:38:36 raz Exp $
+ */
+
+/*
   IF THESE EXAMPLES CHANGE, CHANGE construction.tex CORRESPONDINGLY
 
    S1 := { [t] : 1 <= t <= n }

@@ -1,3 +1,7 @@
+/*
+ * $Id: example.c,v 1.2 2003-05-12 11:38:36 raz Exp $
+ */
+
 //#include <presburger.h>
 #include <stdlib.h>
 #include "../include/omega_stub_types.h"
@@ -19,8 +23,8 @@
 int main ()
 {
   //  Relation R (2, 2), S (2);
-  Relation* R = relation_cons2(2, 2);
-  Relation* S = relation_cons1(2);
+  Relation* R = relation_new2(2, 2);
+  Relation* S = relation_new1(2);
 
   //  S.name_set_var (1, "x");
   //  S.name_set_var (2, "y");
