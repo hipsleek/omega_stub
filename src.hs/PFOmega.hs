@@ -79,16 +79,21 @@ convex_hull (ins, outs, rf) =
 
 gist:: Relation -> Relation -> IO RFormula
 gist (ins1,outs1,rf1) (ins2,outs2,rf2) =
-  build_relation(ins1,outs1,tr "#RF1#" rf1) >>= \(ptr_r1,f1) ->
+--  putStrLn ("#RF1#" ++ show rf1) >>
+  build_relation(ins1,outs1,rf1) >>= \(ptr_r1,f1) ->
   eval_relation ptr_r1 f1 >>
-  build_relation(ins2,outs2,tr "#RF2#" rf2) >>= \(ptr_r2,f2) ->
+--  putStrLn ("#RF2#" ++ show rf2) >>
+  build_relation(ins2,outs2,rf2) >>= \(ptr_r2,f2) ->
   eval_relation ptr_r2 f2 >>
   Omega_stub.gist ptr_r1 ptr_r2 >>= \ptr_gist_r ->
-  relation_extract_rformula ptr_gist_r >>= \rf -> return (tr "#GIST#" rf)
+  relation_extract_rformula ptr_gist_r >>= \rf -> 
+--  putStrLn ("#GIST#" ++ show rf) >>
+  return rf
 
 simplify:: Relation -> IO RFormula
 simplify (ins1,outs1,rf1) =
   build_relation(ins1,outs1,rf1) >>= \(ptr_r1,f1) ->
   eval_relation ptr_r1 f1 >>
-  Omega_stub.relation_simplify1 ptr_r1 >>
-  relation_extract_rformula ptr_r1
+  Omega_stub.relation_simplify3 ptr_r1 2 4 >> --what is the meaning of 2 and 4???? (2 and 4 are used in Omega parser.y)
+  relation_extract_rformula ptr_r1 >>= \rf ->
+  return rf
