@@ -1,4 +1,19 @@
+2003-07-29  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
+
+	* examples.hs/append/Main.hs: rewrite using the new parsing features
+
+	* src.hs/Omega_parser.y:
+	remove Eq, Geq, Leq; add TokenGT, TokenLT and q,qa
+
+	* src.hs/Omega_lexer.hs: scan for TokenGT and TokenLT
+
+	* src.hs/Omega_tokens.hs: add TokenGT and TokenLT
+
+	* src.hs/Omega_types.hs: enhance to "show Coef" and eval_RFormula
+
 2003-07-28  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
+
+	* ChangeLog: regular update
 
 	* examples.hs/append/Main.hs: rewrite using the new functions
 
@@ -219,7 +234,7 @@
 2003-05-12  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
 
 	* src.hs/Makefile, src.hs/Omega.hs, src.hs/README, src/Makefile, src/omega_stub.cpp, include/omega_stub.h, include/omega_stub_types.h, examples/Makefile, examples/example.c, examples/library_example.c, Makefile, Makefile.rules:
-	adding of $Id: ChangeLog,v 1.12 2003-07-28 15:58:42 raz Exp $ to most of the files
+	adding of $Id: ChangeLog,v 1.13 2003-07-29 05:26:34 raz Exp $ to most of the files
 
 	* src.hs/Omega.hs:
 	Omega.hs's hierarchy change from classes to data's(after a talk with Dana Xu Na)
