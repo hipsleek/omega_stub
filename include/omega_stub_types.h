@@ -1,5 +1,5 @@
 /*
- * $Id: omega_stub_types.h,v 1.3 2003-07-22 07:52:34 raz Exp $
+ * $Id: omega_stub_types.h,v 1.4 2004-07-21 11:36:19 popeeaco Exp $
  */
 
 #ifndef _OMEGA_STUB_TYPES_H
@@ -30,8 +30,12 @@ extern "C" {
   typedef int coef_t;
 
   typedef void DNF;
+  typedef void DNF_Iterator;
+  typedef void Constr_Vars_Iter;
+  typedef void Variable_Iterator;
   typedef void EQ_Iterator;
   typedef void GEQ_Iterator;
   
+  typedef void* Var_Kind;
 }
 #endif
