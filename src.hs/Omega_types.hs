@@ -9,6 +9,7 @@ type Relation = ([Variable_name], [Variable_name], RFormula)
 
 data RFormula = RFormula (Variable -> RFormula)
 	      | Formula Formula
+--	      deriving Show
 
 data Formula = And [Formula]
 	     | Or [Formula]
@@ -18,9 +19,11 @@ data Formula = And [Formula]
 	     | Geq [Update]
 	     | Eq [Update]
 	     | Stride Int [Update]
+--	     deriving Show
 
 data Update = Coef Variable Int
 	    | Const Int
+--	    deriving Show
 
 type Variable = (Variable_name, Ptr Omega_stub.Variable)
 
@@ -61,6 +64,12 @@ instance Show Formula where
 instance Show RFormula where
     show (Formula f) = "(F) . " ++ show f
     show (RFormula r) = "[*] . " ++ show (r ("[*]", nullPtr))
+
+--instance Show (Variable -> RFormula) where
+--    show f = show (f ("_", nullPtr))
+
+--instance Show (Variable -> Formula) where
+--    show f = show (f ("_", nullPtr))
 
 --instance Show Variable where
 --    show (var_name, var_ptr) = show var_name
