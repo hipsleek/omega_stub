@@ -31,4 +31,4 @@ Omega_parser.hs: Omega_parser.y $(LIB_HS_DIR)/Omega_tokens.hi $(LIB_HS_DIR)/Omeg
 	happy -i Omega_parser.y
 
 clean:
-	rm -f *.hi *.o *~ $(LIB_HS_DIR)/*.hi $(LIB_HS_DIR)/*.o 
+	rm -f *.hi *.o *~ $(LIB_HS_DIR)/*.hi $(LIB_HS_DIR)/*.o *.info 
