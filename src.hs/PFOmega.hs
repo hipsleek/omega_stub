@@ -79,12 +79,12 @@ convex_hull (ins, outs, rf) =
 
 gist:: Relation -> Relation -> IO RFormula
 gist (ins1,outs1,rf1) (ins2,outs2,rf2) =
-  build_relation(ins1,outs1,rf1) >>= \(ptr_r1,f1) ->
+  build_relation(ins1,outs1,tr "#RF1#" rf1) >>= \(ptr_r1,f1) ->
   eval_relation ptr_r1 f1 >>
-  build_relation(ins2,outs2,rf2) >>= \(ptr_r2,f2) ->
+  build_relation(ins2,outs2,tr "#RF2#" rf2) >>= \(ptr_r2,f2) ->
   eval_relation ptr_r2 f2 >>
   Omega_stub.gist ptr_r1 ptr_r2 >>= \ptr_gist_r ->
-  relation_extract_rformula ptr_gist_r
+  relation_extract_rformula ptr_gist_r >>= \rf -> return (tr "#GIST#" rf)
 
 simplify:: Relation -> IO RFormula
 simplify (ins1,outs1,rf1) =
