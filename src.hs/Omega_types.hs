@@ -9,6 +9,7 @@ type Relation = ([Variable_name], [Variable_name], RFormula)
 
 data RFormula = RFormula (Variable -> RFormula)
 	      | Formula Formula
+	      | Union [RFormula]
 --	      deriving Show
 
 data Formula = And [Formula]

@@ -99,6 +99,11 @@ forall_vars_in_formula ((HeadString v_name):v_names) f = Forall (\v -> (replace_
 %left exists
 
 %%
+LUnion: LUnion1 { Union (reverse $1) }
+
+LUnion1: OFormula   {[$1]}
+  | LUnion1 union OFormula  {$3:$1}
+
 OFormula : '{' '[' Vars ']' arrow '[' Vars ']' Formulas '}' { (replace_vars_in_rformula ($3 ++ $7) (Formula $9)) }
          | '{' '[' Vars ']' arrow '[' Vars ']' ':' Formulas '}' { (replace_vars_in_rformula ($3 ++ $7) (Formula $10)) }
          | '{' '[' Vars ']' Formulas '}' { (replace_vars_in_rformula $3 (Formula $5)) }
