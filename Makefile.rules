@@ -1,17 +1,12 @@
-# $Id: Makefile.rules,v 1.3 2003-05-16 12:47:58 raz Exp $
+# $Id: Makefile.rules,v 1.4 2003-08-19 12:31:41 raz Exp $
 
 CC=g++
 CFLAGS=-DOMIT_QUANTIFY_CALLS -g -Wall -DSIG_HANDLER_HAS_ONE_ARG=1 -DSHUT_UP_ABOUT_STATEMENT_WITH_NO_EFFECT_IN_DYNAMIC_ARRAY_CREATION -Wno-deprecated
 
-BASEDIR=/home/raz/local/src/omega
+BASEDIR=/home/raz/local
 
-INCS_BASIC=-I$(BASEDIR)/basic/include
-INCS_CODE_GEN=-I$(BASEDIR)/code_gen/include
-INCS_OMEG_LIB=-I$(BASEDIR)/omega_lib/include
-
-LIBS_CODE_GEN=-L$(BASEDIR)/code_gen/obj
-LIBS_OMEG_LIB=-L$(BASEDIR)/omega_lib/obj
-
-INCS=$(INCS_BASIC) $(INCS_CODE_GEN) $(INCS_OMEG_LIB) -I.
-LIBS=$(LIBS_CODE_GEN) $(LIBS_OMEG_LIB)
+INCS=-I$(BASEDIR)/include/omega -I.
+LIBS=-L$(BASEDIR)/lib
 LIB=-lcode_gen -lomega -lm
+
+GHC=ghc
