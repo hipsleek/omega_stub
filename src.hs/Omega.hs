@@ -12,6 +12,7 @@ module Omega where
 import Foreign
 import Foreign.C
 import qualified Omega_stub
+import Prelude hiding ((>),(&&),(||))
 
 type Relation = ([Variable_name], Int, RFormula)
 
@@ -274,12 +275,11 @@ eval_function r (Eq us) =
     do r' <- add_eq r
        sequence_ [eval_update r' u | u <- us]
 eval_function r (Stride n us) =
-    do --putStr "eval_function Stride"
-       r' <- add_stride r (fromInteger (toInteger n))
+    do r' <- add_stride r (fromInteger (toInteger n))
        sequence_ [eval_update r' u | u <- us]
-eval_function r f =
-    do putStr "ERROR: You are trying to eval_function-ing a Formula not implemented!"
-       putStr (show f)
+--eval_function r f =
+--    do putStr "ERROR: You are trying to eval_function-ing a Formula not implemented!"
+--       putStr (show f)
 
 eval_update :: (Ptr Omega_stub.Constraint_Handle) -> Update -> IO ()
 eval_update ch (Coef (_, var_ptr) n) =
@@ -287,3 +287,97 @@ eval_update ch (Coef (_, var_ptr) n) =
 eval_update ch (Const n) =
     do Omega_stub.constraint_handler_update_const ch (fromInteger (toInteger n))
 
+(&&) :: Formula -> Formula -> Formula
+f && (And fs) = And (f:fs)
+f1 && f2 = And (f1:[f2])
+
+(||) :: Formula -> Formula -> Formula
+f || (Or fs) = Or (f:fs)
+f1 || f2 = Or (f1:[f2])
+
+class Arith_plus a b where
+    plus :: a -> b -> [Update]
+class Arith_minus a b where
+    minus :: a -> b -> [Update]
+class Arith_mul a b where
+    mul :: a -> b -> Update
+class Arith_q a b where
+    eq :: a -> b -> Formula
+    geq :: a -> b -> Formula
+
+
+instance Arith_plus Update Update where
+    u1 `plus` u2 = (u1:[u2])
+instance Arith_plus Update [Update] where
+    u `plus` us = u:us
+instance Arith_plus Variable [Update] where
+    u `plus` us = (Coef u 1):us
+
+-- instance Num a => Arith_plus [Update] a where
+--     us `plus` i = (Const i):us
+-- instance Num a => Arith_plus a [Update] where
+--     i `plus` us = (Const i):us
+-- instance Num a => Arith_plus Update a where
+--     u `plus` i = (Const i):[u]
+-- instance Num a => Arith_plus a Update where
+--     i `plus` u = (Const i):[u]
+
+instance Arith_plus [Update] Int where
+    us `plus` i = (Const i):us
+instance Arith_plus Int [Update] where
+    i `plus` us = (Const i):us
+instance Arith_plus Update Int where
+    u `plus` i = (Const i):[u]
+instance Arith_plus Int Update where
+    i `plus` u = (Const i):[u]
+
+
+instance Arith_q [Update] Int where
+    us `eq` 0 = Eq us
+    us `eq` i = Eq ((Const (- i)):us)
+    us `geq` 0 = Geq us
+    us `geq` i = Geq ((Const (- i)):us)
+instance Arith_q Int [Update] where
+    0 `eq` us = Eq us
+    i `eq` us = Eq ((Const (- i)):us)
+    0 `geq` us = Geq us
+    i `geq` us = Geq ((Const (- i)):us)
+
+instance Arith_q [Update] Variable where
+    us `eq` v = Eq ((Coef v (- 1)):us)
+    us `geq` v = Geq ((Coef v (- 1)):us)
+instance Arith_q Variable [Update] where
+    v `eq` us = Eq ((Coef v (- 1)):us)
+    v `geq` us = Geq ((Coef v (- 1)):us)
+instance Arith_q [Update] Update where
+    us `eq` (Coef v i) = Eq ((Coef v (- i)):us)
+    us `eq` (Const i) = Eq ((Const (- i)):us)
+    us `geq` (Coef v i) = Geq ((Coef v (- i)):us)
+    us `geq` (Const i) = Geq ((Const (- i)):us)
+instance Arith_q Update [Update] where
+    (Coef v i) `eq` us = Eq ((Coef v (- i)):us)
+    (Const i) `eq` us = Eq ((Const (- i)):us)
+    (Coef v i) `geq` us = Geq ((Coef v (- i)):us)
+    (Const i) `geq` us = Geq ((Const (- i)):us)
+
+
+instance Arith_mul Int Variable where
+    i `mul` v = (Coef v i)
+instance Arith_mul Variable Int where
+    v `mul` i = (Coef v i)
+
+
+n `div` us = Stride n us
+
+f1 = RFormula (\x -> Formula ((Geq [Coef x 1, Const (-1)]) && (Geq [Coef x 1, Const (5)])))
+--f2 = RFormula (\x -> Formula ((((x `mul` 1) `plus` (- 1)) `geq` 0) && ((x `mul` 1) `geq` (- 5))))
+f3 = RFormula (\x -> Formula (And [
+				   (((x `mul` (1::Int)) `plus` (- (1::Int))) `geq` (0::Int))
+				  ]
+			     )
+	      )
+-- f4 = RFormula (\x -> Formula (And [
+-- 				   (((x `mul` 1) `plus` (- 1)) `geq` 0)
+-- 				  ]
+-- 			     )
+-- 	      )
