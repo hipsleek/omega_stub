@@ -15,15 +15,19 @@ simplify (ins1,outs1,rf1) =
   Omega_stub.relation_simplify3 ptr_r1 2 4 >> --what is the meaning of 2 and 4???? (2 and 4 are used in Omega parser.y)
 --  Omega_stub.relation_simplify3 ptr_r1 1 1 >> 
   relation_extract_rformula ptr_r1 >>= \rf ->
+    Omega_stub.relation_delete ptr_r1 >>
   return rf
 
 subset :: Relation -> Relation -> IO Bool
 subset (ins1, outs1, rf1) (ins2, outs2, rf2) =
-    do (ptr_r1, f1) <- build_relation (ins1, outs1, rf1)
-       eval_relation ptr_r1 f1
-       (ptr_r2, f2) <- build_relation (ins2, outs2, rf2)
-       eval_relation ptr_r2 f2
-       Omega_stub.must_be_subset ptr_r1 ptr_r2
+  build_relation (ins1, outs1, rf1) >>= \(ptr_r1, f1) ->
+  eval_relation ptr_r1 f1 >>
+  build_relation (ins2, outs2, rf2) >>= \(ptr_r2, f2) ->
+  eval_relation ptr_r2 f2 >>
+  Omega_stub.must_be_subset ptr_r1 ptr_r2 >>= \rb ->
+    Omega_stub.relation_delete ptr_r1 >>
+    Omega_stub.relation_delete ptr_r2 >>
+  return rb
 
 gist:: Relation -> Relation -> IO RFormula
 gist (ins1,outs1,rf1) (ins2,outs2,rf2) =
@@ -34,25 +38,34 @@ gist (ins1,outs1,rf1) (ins2,outs2,rf2) =
   build_relation(ins2,outs2,rf2) >>= \(ptr_r2,f2) ->
   eval_relation ptr_r2 f2 >>
   Omega_stub.gist ptr_r1 ptr_r2 >>= \ptr_gist_r ->
+    Omega_stub.relation_delete ptr_r1 >>
+    Omega_stub.relation_delete ptr_r2 >>
   relation_extract_rformula ptr_gist_r >>= \rf -> 
+    Omega_stub.relation_delete ptr_gist_r >>
 --  putStrLn ("#GIST#" ++ show rf) >>
   return rf
 
 hull0 :: Relation -> IO RFormula
 hull0 (ins, outs, rf) =
-    do (ptr_r, f) <- build_relation (ins, outs, rf)
-       eval_relation ptr_r f
-       ptr_r' <- Omega_stub.hull0 ptr_r
-       relation_extract_rformula ptr_r'
+  build_relation (ins, outs, rf) >>= \(ptr_r, f) ->
+  eval_relation ptr_r f >>
+  Omega_stub.hull0 ptr_r >>= \ptr_r' ->
+    Omega_stub.relation_delete ptr_r >>
+  relation_extract_rformula ptr_r' >>= \rf ->
+    Omega_stub.relation_delete ptr_r' >>
+  return rf
 
 convex_hull :: Relation -> IO RFormula
 convex_hull (ins, outs, rf) =
-    do (ptr_r, f) <- build_relation (ins, outs, rf)
-       eval_relation ptr_r f
+  build_relation (ins, outs, rf) >>= \(ptr_r, f) ->
+  eval_relation ptr_r f >>
 --       Omega_stub.relation_print ptr_r
-       ptr_r' <- Omega_stub.convex_hull ptr_r
+  Omega_stub.convex_hull ptr_r >>= \ptr_r' ->
 --       Omega_stub.relation_print ptr_r'
-       relation_extract_rformula ptr_r'
+    Omega_stub.relation_delete ptr_r >>
+  relation_extract_rformula ptr_r' >>= \rf ->
+    Omega_stub.relation_delete ptr_r' >>
+  return rf
 
 union_relation:: Relation -> Relation -> IO RFormula
 union_relation (ins1,outs1,rf1) (ins2,outs2,rf2) =
@@ -61,7 +74,10 @@ union_relation (ins1,outs1,rf1) (ins2,outs2,rf2) =
   eval_relation ptr_r1 f1 >>
   eval_relation ptr_r2 f2 >>
   Omega_stub.union_relation ptr_r1 ptr_r2 >>= \ptr_union_r ->
+    Omega_stub.relation_delete ptr_r1 >>
+    Omega_stub.relation_delete ptr_r2 >>
   relation_extract_rformula ptr_union_r >>= \rf ->
+    Omega_stub.relation_delete ptr_union_r >>
   return rf
 
 composition:: Relation -> Relation -> IO RFormula
@@ -71,33 +87,46 @@ composition (ins1,outs1,rf1) (ins2,outs2,rf2) =
   eval_relation ptr_r1 f1 >>
   eval_relation ptr_r2 f2 >>
   Omega_stub.composition ptr_r1 ptr_r2 >>= \ptr_compose_r ->
+    Omega_stub.relation_delete ptr_r1 >>
+    Omega_stub.relation_delete ptr_r2 >>
   relation_extract_rformula ptr_compose_r >>= \rf ->
+    Omega_stub.relation_delete ptr_compose_r >>
   return rf
 
 
 transitive_closure :: Relation -> IO RFormula
 transitive_closure (ins, outs, rf) =
-    do (ptr_r, f) <- build_relation (ins, outs, rf)
-       eval_relation ptr_r f
-       ptr_tc_r <- Omega_stub.transitive_closure1 ptr_r
-       relation_extract_rformula ptr_tc_r
+  build_relation (ins, outs, rf) >>= \(ptr_r, f) ->
+  eval_relation ptr_r f >>
+  Omega_stub.transitive_closure1 ptr_r >>= \ptr_tc_r ->
+    Omega_stub.relation_delete ptr_r >>
+  relation_extract_rformula ptr_tc_r >>= \rf ->
+    Omega_stub.relation_delete ptr_tc_r >>
+  return rf  
 
 difference :: Relation -> Relation -> IO RFormula
 difference (ins1, outs1, rf1) (ins2, outs2, rf2) =
-    do (ptr_r1, f1) <- build_relation (ins1, outs1, rf1)
-       eval_relation ptr_r1 f1
-       (ptr_r2, f2) <- build_relation (ins2, outs2, rf2)
-       eval_relation ptr_r2 f2
-       ptr_diff_r <- Omega_stub.difference ptr_r1 ptr_r2
-       relation_extract_rformula ptr_diff_r
+  build_relation (ins1, outs1, rf1) >>= \(ptr_r1, f1) ->
+  eval_relation ptr_r1 f1 >>
+  build_relation (ins2, outs2, rf2) >>= \(ptr_r2, f2) ->
+  eval_relation ptr_r2 f2 >>
+  Omega_stub.difference ptr_r1 ptr_r2 >>= \ptr_diff_r ->
+    Omega_stub.relation_delete ptr_r1 >>
+    Omega_stub.relation_delete ptr_r2 >>
+  relation_extract_rformula ptr_diff_r >>= \rf ->
+    Omega_stub.relation_delete ptr_diff_r >>
+  return rf  
 
 pairwiseCheck:: Relation -> IO RFormula
 pairwiseCheck (ins,outs,rf) = 
-    do (ptr_r, f) <- build_relation (ins, outs, rf)
-       eval_relation ptr_r f
-       ptr_checked_r <- Omega_stub.check_for_convex_pairs ptr_r
-       ptr_pw_r <- Omega_stub.check_for_convex_representation ptr_checked_r
-       relation_extract_rformula ptr_pw_r
+  build_relation (ins, outs, rf) >>= \(ptr_r, f) ->
+  eval_relation ptr_r f >>
+  Omega_stub.check_for_convex_pairs ptr_r >>= \ptr_checked_r ->
+  Omega_stub.check_for_convex_representation ptr_checked_r >>= \ptr_pw_r ->
+    Omega_stub.relation_delete ptr_r >>
+  relation_extract_rformula ptr_pw_r >>= \rf ->
+    Omega_stub.relation_delete ptr_pw_r >>
+  return rf  
   
 ------------------------
 
