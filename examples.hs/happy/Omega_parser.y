@@ -4,6 +4,7 @@ import Char
 import Omega_tokens
 import Omega_lexer
 import Omega
+import Omega_types
 import Foreign.Ptr
 
 replace_var_in_formula :: Variable_name -> Variable -> Formula -> Formula

@@ -1,7 +1,7 @@
 ---
 -- This is an example using the new Omega module.
 --
--- $Id: Main.hs,v 1.1 2003-07-26 10:09:21 raz Exp $
+-- $Id: Main.hs,v 1.2 2003-07-28 05:11:49 raz Exp $
 --
 
 -- R1 := { [i] -> [j] : j = i + 1 };
@@ -15,6 +15,7 @@
 module Main(main) where
 
 import Omega
+import Omega_types
 import Foreign
 import Foreign.C
 import qualified Omega_stub
