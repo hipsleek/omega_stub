@@ -5,6 +5,7 @@ import Omega_types
 import Omega_tokens
 import Omega_lexer
 import Foreign.Ptr
+import Debug.Trace
 }
 
 %name omega_parser
@@ -51,10 +52,10 @@ LUnion: LUnion1 { let fs = reverse $1 in if (length fs == 1) then head fs else U
 LUnion1: OFormula   {[$1]}
   | LUnion1 union OFormula  {$3:$1}
 
-OFormula : '{' '[' Vars ']' arrow '[' Vars ']' Formulas '}' { (replace_vars_in_rformula ($3 ++ $7) (Formula $9)) }
-         | '{' '[' Vars ']' arrow '[' Vars ']' ':' Formulas '}' { (replace_vars_in_rformula ($3 ++ $7) (Formula $10)) }
-         | '{' '[' Vars ']' Formulas '}' { (replace_vars_in_rformula $3 (Formula $5)) }
-         | '{' '[' Vars ']' ':' Formulas '}' { (replace_vars_in_rformula $3 (Formula $6)) }
+OFormula : '{' '[' Vars ']' arrow '[' Vars ']' Formulas '}' { (replace_vars_in_rformula_With_Pre ($3 ++ $7) (Formula $9)) }
+         | '{' '[' Vars ']' arrow '[' Vars ']' ':' Formulas '}' { (replace_vars_in_rformula_With_Pre ($3 ++ $7) (Formula $10)) }
+         | '{' '[' Vars ']' Formulas '}' { (replace_vars_in_rformula_With_Pre $3 (Formula $5)) }
+         | '{' '[' Vars ']' ':' Formulas '}' { (replace_vars_in_rformula_With_Pre $3 (Formula $6)) }
          | '{' Formulas '}'   { Formula $2}
 
 Vars :: { [HeadVariable] }
@@ -65,55 +66,9 @@ Vars : Vars ',' var { $1 ++ [HeadString $3]}
      | int          { [HeadInt $1] }
      | '-' int %prec NEG { [HeadInt (- $2)] }
 
-
---Formulas :: { Formula }
---Formulas : OrFormulas       { Or $1 }
---	 | AndFormulas      { And $1 }
---	 | '(' Formulas ')' { $2 }
---	 | Formula          { And [$1] }
---	 | {- empty -}      { And [] }
---	 | true             { Or [Eq[Const 0]] }
---	 | false            { And [Eq[Const 0,Const 1]] }
---
---OrFormulas :: { [Formula] }
---OrFormulas : OrFormulas or Formulas { $3:$1 }
---           | Formulas or Formulas { [$1,$3] }
---AndFormulas :: { [Formula] }
---AndFormulas : AndFormulas and Formulas { $3:$1 }
---            | Formulas and Formulas    { [$1,$3] }
---Formula :: { Formula }
---Formula : qs              { $1 }
---        | q               { let (f,_) = $1 in f }
---        | exists '(' Vars ':' Formulas ')' { (exists_vars_in_formula $3 $5) }
---       	| forall '(' Vars ':' Formulas ')' { (forall_vars_in_formula $3 $5) }
---        | '(' Formula ')' { $2 }
-
---qs :: { Formula }
---qs : q '=' Expr { let (f,es) = $1 in (And [f,Eq (es ++ (minus_update $3))]) }
---   | q geq Expr { let (f,es) = $1 in (And [f,Geq (es ++ (minus_update $3))]) }
---   | q leq Expr { let (f,es) = $1 in (And [f,Geq ($3 ++ (minus_update es))]) }
---   | q '>' Expr { let (f,es) = $1 in (And [f,Geq ((Const (- 1)):(es ++ (minus_update $3)))]) }
---   | q '<' Expr { let (f,es) = $1 in (And [f,Geq ((Const (- 1)):($3 ++ (minus_update es)))]) }
---
---q :: { (Formula,[Update]) }
---q : Expr '=' Expr  { ((Eq ($1 ++ (minus_update $3))),$3) }
---  | Expr geq Expr  { ((Geq ($1 ++ (minus_update $3))),$3) }
---  | Expr leq Expr  { ((Geq ($3 ++ (minus_update $1))),$3) }
---  | Expr '>' Expr  { ((Geq ((Const (- 1)):($1 ++ (minus_update $3)))),$3) }
---  | Expr '<' Expr  { ((Geq ((Const (- 1)):($3 ++ (minus_update $1)))),$3) }
---  | Exprs geq Expr { ((And (map (\e -> (Geq (e ++ (minus_update $3)))) $1)),$3) }
---  | Exprs leq Expr { ((And (map (\e -> (Geq ($3 ++ (minus_update e)))) $1)),$3) }
---  | Exprs '>' Expr { ((And (map (\e -> (Geq ((Const (- 1)):(e ++ (minus_update $3))) )) $1)),$3) }
---  | Exprs '<' Expr { ((And (map (\e -> (Geq ((Const (- 1)):($3 ++ (minus_update e))) )) $1)),$3) }
---
---Exprs :: { [[Update]] }
---Exprs : Exprs ',' Expr { $3:$1 }
---      | Expr ',' Expr  { [$1,$3] }
-
 Formulas :: { Formula }
 Formulas : 
   Formula {$1}
---  | Formulas {$1}
   | '(' Formulas ')' {$2}
   | Formulas or Formulas {Or [$1,$3]}
   | Formulas and Formulas {And [$1,$3]}    
@@ -219,31 +174,43 @@ replace_var_in_update v1_name v2 (Const i) = Const i
 replace_var_in_rformula :: Variable_name -> Variable -> RFormula -> RFormula
 replace_var_in_rformula v1_name v2 (RFormula rf) = RFormula (\v -> replace_var_in_rformula v1_name v2 (rf v) )
 replace_var_in_rformula v1_name v2 (Formula f) = Formula (replace_var_in_formula v1_name v2 f)
+-------Changes---------------------
+replace_vars_in_rformula_With_Pre:: [HeadVariable] -> RFormula -> RFormula
+replace_vars_in_rformula_With_Pre v_names (Formula f) = 
+  let (pre_v_names,eqs) = runFS MkState{cnt=0} (preproc_rformula v_names) in
+  replace_vars_in_rformula pre_v_names (Formula $ And (f:eqs))
 
--------HeadVariable----------------
-_replace_vars_in_rformula :: [HeadVariable] -> [(Int,Variable)] -> [(String,[Variable])] -> RFormula -> RFormula
-_replace_vars_in_rformula [] intsToVs strToVs (Formula f) = 
-  let notEmpty = filter (\(s,vs) -> length vs /= 1) strToVs in
-  let eqIntsToVs = map (\(i,v) -> Eq [Coef v 1,Const (-i)]) intsToVs in
-  let eqVsToVs = genEqs notEmpty in
-  Formula $ And ([f,eqVsToVs]++eqIntsToVs)
-_replace_vars_in_rformula ((HeadString v_name):v_names) intsToVs strToVs rf = 
-  RFormula (\v -> 
-    let newStrToVs = case lookup v_name strToVs of
-          Nothing -> (v_name,[v]):strToVs
-          _ -> map (\(str,vs) -> case v_name == str of {True -> (str,v:vs);False -> (str,vs)}) strToVs in
-    (replace_var_in_rformula v_name v (_replace_vars_in_rformula v_names intsToVs newStrToVs rf)))
-_replace_vars_in_rformula ((HeadInt v_int):v_names) intsToVs strToVs rf = 
-  RFormula (\v -> (replace_var_in_rformula ("INT"++show v_int) v (_replace_vars_in_rformula v_names ((v_int,v):intsToVs) strToVs rf)))
+-- examine [HeadVariable] for duplicates
+-- introduce fresh names and equalities between fresh and one of the duplicates
+-- introduce fresh names for integers and eqaulities between fresh and integers
+preproc_rformula:: [HeadVariable] -> FS ([Variable_name],[Formula])
+preproc_rformula [] = return ([],[])
+preproc_rformula (HeadInt v_int:hv_names) =
+  preproc_rformula hv_names >>= \(v_names,eqs) ->
+  fresh >>= \fsh ->
+  let newEq = Eq [Coef (fsh,nullPtr) 1,Const (-v_int)] in
+  return (fsh:v_names,newEq:eqs)
 
-replace_vars_in_rformula:: [HeadVariable] -> RFormula -> RFormula
-replace_vars_in_rformula v_names rf =
-  _replace_vars_in_rformula v_names [] [] rf
+preproc_rformula (HeadString v_name:hv_names) = 
+  preproc_rformula hv_names >>= \(v_names,eqs) ->
+  if isDuplicated v_name hv_names
+    then 
+      fresh >>= \fsh ->
+      let newEq = Eq [Coef (fsh,nullPtr) 1,Coef (v_name,nullPtr) (-1)] in
+      return (fsh:v_names,newEq:eqs)
+    else return (v_name:v_names,eqs)
 
-genEqs:: [(String,[Variable])] -> Formula
-genEqs strToVs = 
-  let f l = map (\v -> Eq[Coef (head l) 1,Coef v (-1)]) (tail l) in
-  And $ concatMap (\(s,vs) -> f vs) strToVs
+-- when looking for duplicates, only HeadString's are important
+isDuplicated:: Variable_name -> [HeadVariable] -> Bool
+isDuplicated v [] = False
+isDuplicated v (HeadString s:v_names) = or [v == s,isDuplicated v v_names]
+isDuplicated v (HeadInt i:v_names) = isDuplicated v v_names
+-------Changes---------------------
+
+replace_vars_in_rformula :: [Variable_name] -> RFormula -> RFormula
+replace_vars_in_rformula [] rf = rf
+replace_vars_in_rformula (v_name:v_names) rf = 
+  RFormula (\v -> (replace_var_in_rformula v_name v (replace_vars_in_rformula v_names rf))) 
 
 --HeadVariable can't be Int in the case of exists and forall
 exists_vars_in_formula :: [HeadVariable] -> Formula -> Formula
@@ -258,4 +225,19 @@ singleton:: [a] -> Bool
 singleton [x] = True
 singleton _ = False 
 
+-------FS Fresh---------------------------
+data St = MkState {cnt :: Integer}
+newtype FS a = FS (St -> (St,a))
+
+instance Monad FS where
+  -- return :: a -> FS a
+  return a = FS (\st -> (st, a))
+  (FS a) >>= f = FS (\st -> let {(st', a') = (a st);(FS b) = (f a')} in b st')
+
+fresh:: FS String
+fresh = FS (\st -> (st{cnt = (cnt st) + 1},"fsh_" ++ show (cnt st)))
+
+runFS:: St -> FS a -> a
+runFS state (FS a) = snd $ a state
+-------FS Fresh---------------------------
 }
