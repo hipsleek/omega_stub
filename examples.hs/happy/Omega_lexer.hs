@@ -1,6 +1,7 @@
 module Omega_lexer(lexer) where
 
 import Omega_tokens
+import Char
 
 lexer :: String -> [Token]
 lexer [] = []
@@ -30,12 +31,14 @@ lexer ('|':'|':cs) = TokenOr : lexer cs
 lexNum cs = TokenInt (read num) : lexer rest
 	where (num,rest) = span isDigit cs
 
+isVarChar c = (isAlphaNum c) || (c == '\'')
+
 lexVar cs =
-   case span isAlpha cs of
+   case span isVarChar cs of
 	("exists",rest) -> TokenExists : lexer rest
 	("forall",rest) -> TokenForall : lexer rest
-	("union",rest) -> TokenUnion : lexer rest
-	(var,rest)   -> TokenVar var : lexer rest
+	("union",rest)  -> TokenUnion : lexer rest
+	(var,rest)      -> TokenVar var : lexer rest
 
 -- {[x] -> [y] y = 1+x }
 -- {[x] -> [y] y = 2+x }
