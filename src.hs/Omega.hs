@@ -14,7 +14,7 @@ import Foreign.C
 import qualified Omega_stub
 import Prelude hiding ((>),(&&),(||))
 
-type Relation = ([Variable_name], Int, RFormula)
+type Relation = ([Variable_name], [Variable_name], RFormula)
 
 data RFormula = RFormula (Variable -> RFormula)
 	      | Formula Formula
@@ -215,21 +215,34 @@ instance Evaluable Omega_stub.F_Exists where
 
 
 build_relation :: Relation -> IO ((Ptr Omega_stub.Relation), RFormula)
-build_relation (vars_in_name, vars_out_no_, rf) =
+build_relation (vars_in_name, vars_out_name, rf) =
     do let vars_in_no =  (fromInteger (toInteger (length vars_in_name)))
-       let vars_out_no = (fromInteger (toInteger vars_out_no_))
-       let build_formula :: RFormula -> [Variable_name] -> CInt -> (Ptr Omega_stub.Relation) -> IO RFormula
-	   build_formula rf [] _ _ = return rf
-	   build_formula (RFormula rf) (var_name:vars_name) offset_var_no r =
+       let vars_out_no = (fromInteger (toInteger (length vars_out_name)))
+       let build_formula :: RFormula -> [Variable_name] -> CInt -> (Ptr Omega_stub.Relation) ->
+			    ((Ptr Omega_stub.Relation) -> CInt -> CString -> IO ()) ->
+			    ((Ptr Omega_stub.Relation) -> CInt -> IO (Ptr Omega_stub.Variable)) ->
+			    IO RFormula
+	   build_formula rf [] _ _ _ _ = return rf
+	   build_formula (RFormula rf) (var_name:vars_name) offset_var_no r _name_var _var =
 	       do var_str <- newCString var_name
-		  Omega_stub.relation_name_set_var r offset_var_no var_str
-	          var_ptr <- Omega_stub.relation_set_var r offset_var_no
-		  build_formula (rf (var_name, var_ptr)) vars_name (offset_var_no + 1) r
-
+		  _name_var r offset_var_no var_str
+	          var_ptr <- _var r offset_var_no
+		  build_formula (rf (var_name, var_ptr)) vars_name (offset_var_no + 1) r _name_var _var
+           name_output :: RFormula -> [Variable_name] -> CInt -> (Ptr Omega_stub.Relation) ->
+			  IO RFormula
+	   name_output rf [] _ _ = return rf
+	   name_output (RFormula rf) (var_name:vars_name) offset_var_no r =
+	       do var_str <- newCString var_name
+		  Omega_stub.relation_name_output_var r offset_var_no var_str
+		  var_ptr <- Omega_stub.relation_output_var r offset_var_no
+		  name_output (rf (var_name, var_ptr)) vars_name (offset_var_no + 1) r
        r <- if vars_out_no <= 0
-           then Omega_stub.relation_new1 vars_in_no
+           then Omega_stub.relation_new1 vars_in_no 
 	   else Omega_stub.relation_new2 vars_in_no vars_out_no
-       rf <- build_formula rf vars_in_name 1 r
+       rf <- if vars_out_no <= 0
+	  then build_formula rf vars_in_name 1 r Omega_stub.relation_name_set_var Omega_stub.relation_set_var
+	  else do rf <- build_formula rf vars_in_name 1 r Omega_stub.relation_name_input_var Omega_stub.relation_input_var
+		  name_output rf vars_out_name 1 r
        return (r, rf)
 
 eval_relation :: Evaluable r => (Ptr r) -> RFormula -> IO ()
