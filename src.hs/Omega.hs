@@ -218,7 +218,8 @@ n `div` us = Stride n us
 
 relation_extract_rformula :: (Ptr Omega_stub.Relation) -> IO RFormula
 relation_extract_rformula ptr_r =
-    do ptr_str_print <- Omega_stub.relation_print_to_string ptr_r
+    do Omega_stub.relation_setup_names ptr_r
+       ptr_str_print <- Omega_stub.relation_print_to_string ptr_r
        str_print <- peekCString ptr_str_print
        return (extract_rformula str_print)
 
