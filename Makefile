@@ -1,8 +1,8 @@
 # RazvanME: hand made stuff :-)
 #
-# $Id: Makefile,v 1.4 2003-05-26 05:11:37 raz Exp $
+# $Id: Makefile,v 1.5 2003-06-27 10:02:49 raz Exp $
 
-all: lib lib.hs exemples
+all: lib lib.hs examples examples.hs
 
 lib:
 	cd src && $(MAKE) all
@@ -10,8 +10,12 @@ lib:
 lib.hs:
 	cd src.hs && $(MAKE) all
 
-exemples: lib lib.hs
+examples: lib lib.hs
 	cd examples && $(MAKE)
+
+examples.hs: lib lib.hs
+	cd examples.hs/example && $(MAKE)
+	cd examples.hs/myexample && $(MAKE)
 
 clean:
 	cd src && $(MAKE) clean
