@@ -1,4 +1,4 @@
-{- $Id: Omega_stub.hs,v 1.5 2003-07-22 07:52:42 raz Exp $ -}
+{- $Id: Omega_stub.hs,v 1.6 2003-07-28 05:16:32 raz Exp $ -}
 
 module Omega_stub where
 
@@ -112,6 +112,8 @@ foreign import ccall relation_print_with_subs :: (Ptr Relation) -> Bool -> IO ()
 foreign import ccall relation_print_with_subs_to_file :: (Ptr Relation) -> (Ptr CFile) -> Bool -> IO ()
 foreign import ccall relation_print_with_subs_to_string :: (Ptr Relation) -> Bool -> IO (CString)
 foreign import ccall relation_print_formula_to_string :: (Ptr Relation) -> IO (CString)
+foreign import ccall relation_print_outputs_with_subs_to_string :: (Ptr Relation) -> IO (CString)
+
 
 
 -- simplification and satisfiability
