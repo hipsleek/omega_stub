@@ -1,3 +1,13 @@
+2003-05-12  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
+
+	* src.hs/Makefile, src.hs/Omega.hs:
+	start of Omega library development in Haskell
+
+2003-05-11  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
+
+	* examples/Makefile, src/Makefile:
+	Exit.o is compiled now only by src/Makefile
+
 2003-05-10  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
 
 	* src/omega_stub.cpp, include/omega_stub.:
