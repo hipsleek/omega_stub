@@ -31,7 +31,10 @@ type Variable_name = String
 
 instance Show Update where
     show (Const i) = show i
-    show (Coef v i) = show i ++ "*" ++ show v
+    show (Coef (v_name,_) 1) = v_name
+    show (Coef (v_name,_) (- 1)) = "(-"++ v_name ++ ")"
+    show (Coef (v_name,_) i) = (show i) ++ "*" ++ v_name
+
 
 instance Show Formula where
     show (And c) = let show_vec :: [Formula] -> String
@@ -74,10 +77,9 @@ instance Show RFormula where
 --instance Show Variable where
 --    show (var_name, var_ptr) = show var_name
 
-eval_RFormula :: [String] -> RFormula -> IO String
-eval_RFormula _ (Formula f) = do let r = show f
-				 putStr r
-				 return r
+
+eval_RFormula :: [String] -> RFormula -> String
+eval_RFormula _ (Formula f) = show f
 eval_RFormula (var:vars) (RFormula rf) = eval_RFormula vars (rf (var, nullPtr))
 
 -- experimental stuff
