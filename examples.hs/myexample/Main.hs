@@ -1,7 +1,7 @@
 ---
 -- This is an example using the new Omega module.
 --
--- $Id $
+-- $Id: Main.hs,v 1.3 2003-07-04 03:42:22 raz Exp $
 --
 
 module Main(main) where
@@ -29,7 +29,7 @@ main = do
 						      )
 				      )
 		      )
-    (s, (RFormula sf)) <- build_relation (["x", "y"], 0, sf)
+    (s, (RFormula sf)) <- build_relation (["x", "y"], [], sf)
 
     n_str <- newCString "n"
     n_ptr <- Omega_stub.free_var_decl0 n_str
