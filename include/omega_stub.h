@@ -1,5 +1,5 @@
 /*
- * $Id: omega_stub.h,v 1.6 2003-07-07 04:24:55 raz Exp $
+ * $Id: omega_stub.h,v 1.7 2003-07-10 06:50:11 raz Exp $
  */
 
 #ifndef _OMEGA_STUB_H
@@ -12,6 +12,7 @@ extern "C" {
   Relation* relation_new0();
   Relation* relation_new1(int n_input);
   Relation* relation_new2(int n_input, int n_output);
+  Relation* relation_copy(Relation* r);
 
   void relation_delete(Relation* r);
 
@@ -27,6 +28,11 @@ extern "C" {
   void relation_name_set_var(Relation* r, int nth, char* name);
   void relation_name_input_var(Relation* r, int nth, char* name);
   void relation_name_output_var(Relation* r, int nth, char* name);
+
+  bool relation_is_set(Relation* r);
+  int relation_n_inp(Relation* r);
+  int relation_n_out(Relation* r);
+  int relation_n_set(Relation* r);
 
   F_And* relation_add_and(Relation* r);
   F_Or* relation_add_or(Relation* r);
@@ -153,6 +159,15 @@ extern "C" {
   bool must_be_subset(Relation* r1, Relation* r2);
   bool might_be_subset(Relation* r1, Relation* r2);
   bool is_obvious_subset(Relation* r1, Relation* r2);
+
+  // query
+  DNF* dnf_iterator_new1(Relation* r);
+  DNF* dnf_iterator_new3(Relation* r, int rdt_conjs, int rdt_constrs);
+  DNF* dnf_iterator_next(DNF* dnf);
+  EQ_Iterator* eq_iterator_new(DNF* dnf);
+  EQ_Iterator* eq_iterator_next(EQ_Iterator* eq);
+  GEQ_Iterator* geq_iterator_new(DNF* dnf);
+  GEQ_Iterator* geq_iterator_next(GEQ_Iterator* geq);
 
 }
 
