@@ -50,6 +50,8 @@ forall_vars_in_formula (v_name:v_names) f = Forall (\v -> (replace_var_in_formul
 	'='		{ TokenEq }
 	geq		{ TokenGeq }
 	leq		{ TokenLeq }
+	'>'		{ TokenGT }
+	'<'		{ TokenLT }
 	'+'		{ TokenPlus }
 	'-'		{ TokenMinus }
 	'*'		{ TokenTimes }
@@ -92,20 +94,25 @@ AndFormulas :: { [Formula] }
 AndFormulas : AndFormulas and Formulas { $3:$1 }
             | Formulas and Formulas     { [$1,$3] }
 Formula :: { Formula }
-Formula : Eq         { Eq $1 }
-	| Geq        { Geq $1 }
-	| Leq        { Geq $1 }
+Formula : qs              { $1 }
+        | q               { let (f,_) = $1 in f }
         | exists '(' Vars ':' Formulas ')' { (exists_vars_in_formula $3 $5) }
  	| forall '(' Vars ':' Formulas ')' { (forall_vars_in_formula $3 $5) }
         | '(' Formula ')' { $2 }
 
-Eq :: { [Update] }
-Eq  : Expr '=' Expr  { $1 ++ (minus_update $3) }
-    | Eq '=' Expr    { $1 }                             -- ignoring $3
-Geq : Expr geq Expr  { $1 ++ (minus_update $3) }
-    | Geq geq Expr   { $1 }                             -- ignoring $3
-Leq : Expr leq Expr  { $3 ++ (minus_update $1) }
-    | Leq leq Expr   { $1 }                             -- ignoring $3
+qs :: { Formula }
+qs : q '=' Expr { let (f,es) = $1 in (And [f,Eq (es ++ (minus_update $3))]) }
+   | q geq Expr { let (f,es) = $1 in (And [f,Geq (es ++ (minus_update $3))]) }
+   | q leq Expr { let (f,es) = $1 in (And [f,Geq ($3 ++ (minus_update es))]) }
+   | q '>' Expr { let (f,es) = $1 in (And [f,Geq ((Const (- 1)):(es ++ (minus_update $3)))]) }
+   | q '<' Expr { let (f,es) = $1 in (And [f,Geq ((Const (- 1)):($3 ++ (minus_update es)))]) }
+
+q :: { (Formula,[Update]) }
+q : Expr '=' Expr { ((Eq ($1 ++ (minus_update $3))),$3) }
+  | Expr geq Expr { ((Geq ($1 ++ (minus_update $3))),$3) }
+  | Expr leq Expr { ((Geq ($3 ++ (minus_update $1))),$3) }
+  | Expr '>' Expr { ((Geq ((Const (- 1)):($1 ++ (minus_update $3)))),$3) }
+  | Expr '<' Expr { ((Geq ((Const (- 1)):($3 ++ (minus_update $1)))),$3) }
 
 Expr :: { [Update] }
 Expr : Expr '+' Expr { $1 ++ $3 }
