@@ -1,9 +1,9 @@
 all: lib
 
-lib: Omega.o
+lib: ../lib.hs/Omega.o ../lib.hs/Omega.hi
 
-Omega.o: Omega.hs
-	ghc -fglasgow-exts -c Omega.hs
+../lib.hs/Omega.o ../lib.hs/Omega.hi: Omega.hs
+	ghc -fglasgow-exts -c Omega.hs -odir ../lib.hs -hidir ../lib.hs
 
 clean:
-	rm -f *.hi *.o *~
+	rm -f *.hi *.o *~ ../lib.hs/*.hi ../lib.hs/*.o 
