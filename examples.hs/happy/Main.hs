@@ -1,7 +1,7 @@
 ---
 -- This is an example using the new Omega module.
 --
--- $Id: Main.hs,v 1.2 2003-07-28 05:11:49 raz Exp $
+-- $Id: Main.hs,v 1.3 2003-07-28 15:55:00 raz Exp $
 --
 
 -- R1 := { [i] -> [j] : j = i + 1 };
@@ -21,10 +21,12 @@ import Foreign.C
 import qualified Omega_stub
 import Omega_util
 import Omega_parser
+import Omega_lexer
 
 main = do
     putStr "[START]\n"
     str <- getLine
+    putStr ((show (omega_lexer str)) ++ "\n")
     putStr ((show (extract_rformula str)) ++ "\n")
     putStr "[DONE]\n"
 
