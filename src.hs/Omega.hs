@@ -310,7 +310,6 @@ f1 || f2 = Or (f1:[f2])
 
 class Arith_plus a b where
     plus :: a -> b -> [Update]
-class Arith_minus a b where
     minus :: a -> b -> [Update]
 class Arith_mul a b where
     mul :: a -> b -> Update
@@ -321,10 +320,10 @@ class Arith_q a b where
 
 instance Arith_plus Update Update where
     u1 `plus` u2 = (u1:[u2])
+    u1 `minus` u2 = (u1:(minus_update [u2]))
 instance Arith_plus Update [Update] where
     u `plus` us = u:us
-instance Arith_plus Variable [Update] where
-    v `plus` us = (Coef v 1):us
+    u `minus` us = u:(minus_update us)
 
 -- instance Num a => Arith_plus [Update] a where
 --     us `plus` i = (Const i):us
@@ -337,17 +336,39 @@ instance Arith_plus Variable [Update] where
 
 instance Arith_plus [Update] Int where
     us `plus` i = (Const i):us
+    us `minus` i = (Const (- i)):us
 instance Arith_plus Int [Update] where
     i `plus` us = (Const i):us
+    i `minus` us = (Const i):(minus_update us)
 instance Arith_plus Update Int where
     u `plus` i = (Const i):[u]
+    u `minus` i = (Const (- i)):[u]
 instance Arith_plus Int Update where
     i `plus` u = (Const i):[u]
+    i `minus` u = (Const i):(minus_update [u])
 
+instance Arith_plus [Update] Variable where
+    us `plus` v = (Coef v 1):us
+    us `minus` v = (Coef v (- 1)):us
+instance Arith_plus Variable [Update] where
+    v `plus` us = (Coef v 1):us
+    v `minus` us = (Coef v 1):(minus_update us)
 instance Arith_plus Variable Int where
-    v `plus` i = [(Coef v 1), (Const i)]
+    v `plus` i = [Coef v 1, Const i]
+    v `minus` i = [Coef v 1, Const (- i)]
 instance Arith_plus Int Variable where
-    i `plus` v = [(Const i), (Coef v 1)]
+    i `plus` v = [Const i, Coef v 1]
+    i `minus` v = [Const i, Coef v (- 1)]
+
+instance Arith_plus Variable Variable where
+    v1 `plus` v2 = [Coef v1 1, Coef v2 1]
+    v1 `minus` v2 = [Coef v1 1, Coef v2 (- 1)]
+
+
+minus_update :: [Update] -> [Update]
+minus_update [] = []
+minus_update ((Const i):us) = (Const (- i)):(minus_update us)
+minus_update ((Coef v i):us) = (Coef v (- i)):(minus_update us)
 
 
 instance Arith_q [Update] Int where
@@ -377,7 +398,15 @@ instance Arith_q Update [Update] where
     (Const i) `eq` us = Eq ((Const (- i)):us)
     (Coef v i) `geq` us = Geq ((Coef v (- i)):us)
     (Const i) `geq` us = Geq ((Const (- i)):us)
-
+instance Arith_q Variable Int where
+    v `eq` i = Eq [Const (- i), Coef v 1]
+    v `geq` i = Geq [Const (- i), Coef v 1]
+instance Arith_q Int Variable where
+    i `eq` v = Eq [Const (- i), Coef v 1]
+    i `geq` v = Geq [Const (- i), Coef v 1]
+instance Arith_q Variable Variable where
+    v1 `eq` v2 = Eq [Coef v1 1, Coef v2 (- 1)]
+    v1 `geq` v2 = Geq [Coef v1 1, Coef v2 (- 1)]
 
 instance Arith_mul Int Variable where
     i `mul` v = (Coef v i)
