@@ -54,6 +54,11 @@ rformula_print (ins, outs, rf) =
 --       Omega_stub.relation_print ptr_r
        Omega_stub.relation_print_with_subs ptr_r True
 
+rformula_print_formula_to_string :: RFormula -> [String] -> String
+rformula_print_formula_to_string (Formula f) _ = let (str, _) = omega_show f 1
+						 in str
+rformula_print_formula_to_string (RFormula rf) (var:vars) = rformula_print_formula_to_string (rf (var, nullPtr)) vars
+
 
 convex_hull :: Relation -> IO RFormula
 convex_hull (ins, outs, rf) =
