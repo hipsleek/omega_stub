@@ -1,5 +1,12 @@
 2003-06-23  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
 
+	* src.hs/Omega.hs: a more mature Omega module
+
+	* examples.hs/myexample/Main.hs:
+	an example similar with examples/example.c and examples.hs/example but using Omega (not Omega_stub) module
+
+	* ChangeLog: regular update
+
 	* examples.hs/example/Main.hs:
 	f_declare -> f_exists_declare; f_or_add_and is now available
 
@@ -65,7 +72,7 @@
 2003-05-12  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
 
 	* src.hs/Makefile, src.hs/Omega.hs, src.hs/README, src/Makefile, src/omega_stub.cpp, include/omega_stub.h, include/omega_stub_types.h, examples/Makefile, examples/example.c, examples/library_example.c, Makefile, Makefile.rules:
-	adding of $Id: ChangeLog,v 1.7 2003-06-23 10:04:21 raz Exp $ to most of the files
+	adding of $Id: ChangeLog,v 1.8 2003-07-03 14:01:44 raz Exp $ to most of the files
 
 	* src.hs/Omega.hs:
 	Omega.hs's hierarchy change from classes to data's(after a talk with Dana Xu Na)
