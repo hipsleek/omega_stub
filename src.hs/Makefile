@@ -1,7 +1,7 @@
 all: lib
 
 LIB_HS_DIR=../lib.hs
-GHCFLAGS=-fglasgow-exts -fallow-overlapping-instances
+GHC_FLAGS=-fglasgow-exts -fallow-overlapping-instances 
 
 lib:						\
 	$(LIB_HS_DIR)/Omega_util.o		\
@@ -23,9 +23,9 @@ $(LIB_HS_DIR)/Omega_stub.o $(LIB_HS_DIR)/Omega_stub.hi: Omega_stub.hs
 $(LIB_HS_DIR)/PFOmega.o $(LIB_HS_DIR)/PFOmega.hi: PFOmega.hs  $(LIB_HS_DIR)/Omega_stub.hi $(LIB_HS_DIR)/Omega_types.hi $(LIB_HS_DIR)/Omega_parser.hi $(LIB_HS_DIR)/Omega.hi
 
 $(LIB_HS_DIR)/%.hi: %.hs
-	ghc -fglasgow-exts -i$(LIB_HS_DIR) -c $< -odir $(LIB_HS_DIR) -hidir $(LIB_HS_DIR)
+	ghc $(GHC_FLAGS) -i$(LIB_HS_DIR) -c $< -odir $(LIB_HS_DIR) -hidir $(LIB_HS_DIR)
 $(LIB_HS_DIR)/%.o: %.hs
-	ghc -fglasgow-exts -i$(LIB_HS_DIR) -c $< -odir $(LIB_HS_DIR) -hidir $(LIB_HS_DIR)
+	ghc $(GHC_FLAGS) -i$(LIB_HS_DIR) -c $< -odir $(LIB_HS_DIR) -hidir $(LIB_HS_DIR)
 
 Omega_parser.hs: Omega_parser.y $(LIB_HS_DIR)/Omega_tokens.hi $(LIB_HS_DIR)/Omega_types.hi
 	happy -i Omega_parser.y

@@ -1,7 +1,7 @@
 ---
 -- Fix point for "append"
 --
--- $Id: Main.hs,v 1.7 2003-08-07 12:42:26 raz Exp $
+-- $Id: Main.hs,v 1.8 2004-03-16 06:21:43 popeeaco Exp $
 --
 
 
@@ -69,8 +69,8 @@ main = do
     let	append_0 = extract_rformula "{ [a,b,c] a = 0 && b = c }"
     let	append_r = extract_rformula "{ [a,b,c] -> [a',b',c'] a >= 0 && b >= 0 && c >= 0 && a' >= 0 && b' >= 0 && c' >= 0 && a' = a - 1 && b' = b && c = c' + 1 }"
 
---    append_tc_r <- transitive_closure (["a", "b", "c"], ["a'", "b'", "c'"], append_r)
---    putStr ("tc_append_r: " ++ (eval_RFormula ["a", "b", "c", "a'", "b'", "c;"] append_tc_r) ++ "\n")
+    append_tc_r <- transitive_closure (["a", "b", "c"], ["a'", "b'", "c'"], append_r)
+    putStr ("tc_append_r: " ++ (rformula_print_formula_to_string append_tc_r ["a", "b", "c", "a'", "b'", "c;"]) ++ "\n")
 
     putStr "Bottom-up:\n"
     bup_append_1 <- bup_one_step append_0 append_r 1

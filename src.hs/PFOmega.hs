@@ -8,6 +8,83 @@ import Foreign.C
 import qualified Omega_stub
 import Prelude hiding ((&&),(||))
 
+simplify:: Relation -> IO RFormula
+simplify (ins1,outs1,rf1) =
+  build_relation(ins1,outs1,rf1) >>= \(ptr_r1,f1) ->
+  eval_relation ptr_r1 f1 >>
+  Omega_stub.relation_simplify3 ptr_r1 2 4 >> --what is the meaning of 2 and 4???? (2 and 4 are used in Omega parser.y)
+  relation_extract_rformula ptr_r1 >>= \rf ->
+  return rf
+
+subset :: Relation -> Relation -> IO Bool
+subset (ins1, outs1, rf1) (ins2, outs2, rf2) =
+    do (ptr_r1, f1) <- build_relation (ins1, outs1, rf1)
+       eval_relation ptr_r1 f1
+       (ptr_r2, f2) <- build_relation (ins2, outs2, rf2)
+       eval_relation ptr_r2 f2
+       Omega_stub.must_be_subset ptr_r1 ptr_r2
+
+gist:: Relation -> Relation -> IO RFormula
+gist (ins1,outs1,rf1) (ins2,outs2,rf2) =
+--  putStrLn ("#RF1#" ++ show rf1) >>
+  build_relation(ins1,outs1,rf1) >>= \(ptr_r1,f1) ->
+  eval_relation ptr_r1 f1 >>
+--  putStrLn ("#RF2#" ++ show rf2) >>
+  build_relation(ins2,outs2,rf2) >>= \(ptr_r2,f2) ->
+  eval_relation ptr_r2 f2 >>
+  Omega_stub.gist ptr_r1 ptr_r2 >>= \ptr_gist_r ->
+  relation_extract_rformula ptr_gist_r >>= \rf -> 
+--  putStrLn ("#GIST#" ++ show rf) >>
+  return rf
+
+convex_hull :: Relation -> IO RFormula
+convex_hull (ins, outs, rf) =
+    do (ptr_r, f) <- build_relation (ins, outs, rf)
+       eval_relation ptr_r f
+--       Omega_stub.relation_print ptr_r
+       ptr_r' <- Omega_stub.convex_hull ptr_r
+--       Omega_stub.relation_print ptr_r'
+       relation_extract_rformula ptr_r'
+
+union_relation:: Relation -> Relation -> IO RFormula
+union_relation (ins1,outs1,rf1) (ins2,outs2,rf2) =
+  build_relation (ins1,outs1,rf1) >>= \(ptr_r1,f1) ->
+  build_relation (ins2,outs2,rf2) >>= \(ptr_r2,f2) ->
+  eval_relation ptr_r1 f1 >>
+  eval_relation ptr_r2 f2 >>
+  Omega_stub.union_relation ptr_r1 ptr_r2 >>= \ptr_union_r ->
+  relation_extract_rformula ptr_union_r >>= \rf ->
+  return rf
+
+composition:: Relation -> Relation -> IO RFormula
+composition (ins1,outs1,rf1) (ins2,outs2,rf2) =
+  build_relation (ins1,outs1,rf1) >>= \(ptr_r1,f1) ->
+  build_relation (ins2,outs2,rf2) >>= \(ptr_r2,f2) ->
+  eval_relation ptr_r1 f1 >>
+  eval_relation ptr_r2 f2 >>
+  Omega_stub.composition ptr_r1 ptr_r2 >>= \ptr_compose_r ->
+  relation_extract_rformula ptr_compose_r >>= \rf ->
+  return rf
+
+
+transitive_closure :: Relation -> IO RFormula
+transitive_closure (ins, outs, rf) =
+    do (ptr_r, f) <- build_relation (ins, outs, rf)
+       eval_relation ptr_r f
+       ptr_tc_r <- Omega_stub.transitive_closure1 ptr_r
+       relation_extract_rformula ptr_tc_r
+
+difference :: Relation -> Relation -> IO RFormula
+difference (ins1, outs1, rf1) (ins2, outs2, rf2) =
+    do (ptr_r1, f1) <- build_relation (ins1, outs1, rf1)
+       eval_relation ptr_r1 f1
+       (ptr_r2, f2) <- build_relation (ins2, outs2, rf2)
+       eval_relation ptr_r2 f2
+       ptr_diff_r <- Omega_stub.difference ptr_r1 ptr_r2
+       relation_extract_rformula ptr_diff_r
+------------------------
+
+------------------------
 class Function a b c where
     apply :: a -> b -> c
 
@@ -23,31 +100,6 @@ to_formula (RFormula rf) =
 
 f_apply :: RFormula -> [Variable] -> Formula
 f_apply r vars = to_formula (apply r vars)
-
-transitive_closure :: Relation -> IO RFormula
-transitive_closure (ins, outs, rf) =
-    do (ptr_r, f) <- build_relation (ins, outs, rf)
-       eval_relation ptr_r f
-       ptr_tc_r <- Omega_stub.transitive_closure1 ptr_r
-       relation_extract_rformula ptr_tc_r
-
-
-subset :: Relation -> Relation -> IO Bool
-subset (ins1, outs1, rf1) (ins2, outs2, rf2) =
-    do (ptr_r1, f1) <- build_relation (ins1, outs1, rf1)
-       eval_relation ptr_r1 f1
-       (ptr_r2, f2) <- build_relation (ins2, outs2, rf2)
-       eval_relation ptr_r2 f2
-       Omega_stub.must_be_subset ptr_r1 ptr_r2
-
-difference :: Relation -> Relation -> IO RFormula
-difference (ins1, outs1, rf1) (ins2, outs2, rf2) =
-    do (ptr_r1, f1) <- build_relation (ins1, outs1, rf1)
-       eval_relation ptr_r1 f1
-       (ptr_r2, f2) <- build_relation (ins2, outs2, rf2)
-       eval_relation ptr_r2 f2
-       ptr_diff_r <- Omega_stub.difference ptr_r1 ptr_r2
-       relation_extract_rformula ptr_diff_r
 
 rformula_print :: Relation -> IO ()
 rformula_print (ins, outs, rf) =
@@ -67,33 +119,3 @@ rformula_print_formula_to_string (Union rfs) vars =
     (rf:rfs) -> (rformula_print_formula_to_string rf vars) ++ " union " ++ 
       (rformula_print_formula_to_string (Union rfs) vars)
 
-convex_hull :: Relation -> IO RFormula
-convex_hull (ins, outs, rf) =
-    do (ptr_r, f) <- build_relation (ins, outs, rf)
-       eval_relation ptr_r f
---       Omega_stub.relation_print ptr_r
-       ptr_r' <- Omega_stub.convex_hull ptr_r
---       Omega_stub.relation_print ptr_r'
-       relation_extract_rformula ptr_r'
-
-
-gist:: Relation -> Relation -> IO RFormula
-gist (ins1,outs1,rf1) (ins2,outs2,rf2) =
---  putStrLn ("#RF1#" ++ show rf1) >>
-  build_relation(ins1,outs1,rf1) >>= \(ptr_r1,f1) ->
-  eval_relation ptr_r1 f1 >>
---  putStrLn ("#RF2#" ++ show rf2) >>
-  build_relation(ins2,outs2,rf2) >>= \(ptr_r2,f2) ->
-  eval_relation ptr_r2 f2 >>
-  Omega_stub.gist ptr_r1 ptr_r2 >>= \ptr_gist_r ->
-  relation_extract_rformula ptr_gist_r >>= \rf -> 
---  putStrLn ("#GIST#" ++ show rf) >>
-  return rf
-
-simplify:: Relation -> IO RFormula
-simplify (ins1,outs1,rf1) =
-  build_relation(ins1,outs1,rf1) >>= \(ptr_r1,f1) ->
-  eval_relation ptr_r1 f1 >>
-  Omega_stub.relation_simplify3 ptr_r1 2 4 >> --what is the meaning of 2 and 4???? (2 and 4 are used in Omega parser.y)
-  relation_extract_rformula ptr_r1 >>= \rf ->
-  return rf

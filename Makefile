@@ -1,8 +1,9 @@
 # RazvanME: hand made stuff :-)
 #
-# $Id: Makefile,v 1.9 2003-08-19 12:42:02 raz Exp $
+# $Id: Makefile,v 1.10 2004-03-16 06:21:38 popeeaco Exp $
 
-all: lib lib.hs examples.hs
+#all: lib lib.hs examples.hs
+all: lib lib.hs
 
 lib:
 	cd src && $(MAKE) all
