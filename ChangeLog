@@ -1,4 +1,82 @@
-2003-07-29  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
+2003-08-19  Razvan Musaloiu-E.  <raz@athos>
+
+	* Makefile: add examples.hs/report_ex1
+
+	* src.hs/Omega_util.hs: disable debug messages
+
+	* src/Makefile, src/Exit.c: add Exit.c from omega library sources
+
+	* Makefile.rules: remove the direct use of omega sources
+
+	* src.hs/Makefile: small enhance
+
+	* examples.hs/report_ex1/Main.hs, examples.hs/report_ex1/Makefile:
+	a tiny example for slides
+
+	* Makefile: add examples.hs/qsort
+
+	* examples.hs/qsort/Main.hs: top-down fix-point for quicksort
+
+2003-08-18  Razvan Musaloiu-E.  <raz@athos>
+
+	* examples.hs/qsort/Makefile, examples.hs/myexample/Makefile, examples.hs/happy/Makefile, examples.hs/example2/Makefile, examples.hs/example1/Makefile, examples.hs/example/Makefile:
+	small bug
+
+	* src.hs/PFOmega.hs: add to_formula
+
+	* src.hs/Omega_parser.y: add unary '-'
+
+	* src.hs/Omega.hs: small bug
+
+2003-08-07  Razvan Musaloiu-E.  <raz@athos>
+
+	* examples.hs/append/Main.hs: tod-down without output vars
+
+	* examples.hs/append/Makefile, examples.hs/append/Main.hs: small change
+
+2003-08-04  Razvan Musaloiu-E.  <raz@athos>
+
+	* examples.hs/qsort/Main.hs: now the fix-point is finally "a = b" :-)
+
+2003-08-03  Razvan Musaloiu-E.  <raz@athos>
+
+	* examples.hs/qsort/Main.hs, examples.hs/qsort/Makefile:
+	cleanup + make it work :-)
+
+	* src.hs/Omega_types.hs:
+	add a new class Omega_Show with a function called omega_show which provides a better handling of variables
+
+	* src.hs/Omega.hs: add small error handling enhancement
+
+	* src.hs/PFOmega.hs: add rformula_print_formula_to_string
+
+	* src.hs/Makefile, src.hs/PFOmega.hs:
+	new module: PFOmega (PF = pure functional)
+
+2003-08-01  Razvan Musaloiu-E.  <raz@athos>
+
+	* examples.hs/qsort/Main.hs, examples.hs/qsort/Makefile:
+	bottom-up fix-point for quicksort
+
+2003-07-31  Razvan Musaloiu-E.  <raz@athos>
+
+	* src.hs/Omega_parser.y: parse complex forms like: expr, expr <= expr
+
+	* src.hs/Omega_lexer.hs:
+	'_' is a valid variable name; add &, |, and, or
+
+	* src.hs/Omega.hs:
+	Omega_stub.relation_setup_names in relation_extract_rformula
+
+	* examples.hs/myexample/Makefile, examples.hs/happy/Makefile, examples.hs/example2/Makefile, examples.hs/example1/Makefile, examples.hs/example/Makefile:
+	template based
+
+	* examples.hs/append/Main.hs, examples.hs/append/Makefile:
+	more generic approach
+
+2003-07-29  Razvan Musaloiu-E.  <raz@athos>
+
+	* ChangeLog: regular update
 
 	* examples.hs/append/Main.hs: rewrite using the new parsing features
 
@@ -234,7 +312,7 @@
 2003-05-12  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
 
 	* src.hs/Makefile, src.hs/Omega.hs, src.hs/README, src/Makefile, src/omega_stub.cpp, include/omega_stub.h, include/omega_stub_types.h, examples/Makefile, examples/example.c, examples/library_example.c, Makefile, Makefile.rules:
-	adding of $Id: ChangeLog,v 1.13 2003-07-29 05:26:34 raz Exp $ to most of the files
+	adding of $Id: ChangeLog,v 1.14 2003-08-19 12:46:26 raz Exp $ to most of the files
 
 	* src.hs/Omega.hs:
 	Omega.hs's hierarchy change from classes to data's(after a talk with Dana Xu Na)
