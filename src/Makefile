@@ -1,8 +1,8 @@
-# $Id: Makefile,v 1.3 2003-05-16 12:48:47 raz Exp $
+# $Id: Makefile,v 1.4 2003-05-26 05:10:56 raz Exp $
 
 include ../Makefile.rules
 
-all: lib exit
+all: lib exit ../lib/Exit.o
 
 lib: ../lib/omega_stub.o
 
