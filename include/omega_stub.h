@@ -1,5 +1,5 @@
 /*
- * $Id: omega_stub.h,v 1.5 2003-07-04 03:50:19 raz Exp $
+ * $Id: omega_stub.h,v 1.6 2003-07-07 04:24:55 raz Exp $
  */
 
 #ifndef _OMEGA_STUB_H
@@ -80,12 +80,13 @@ extern "C" {
   // printing
   void relation_print(Relation* r);
   void relation_print_to_file(Relation* r, FILE* output_file);
+  void relation_print_with_subs(Relation* r, bool printSym);
   void relation_print_with_subs_to_file(Relation* r, FILE* output_file, bool printSym);
   const char* relation_print_with_subs_to_string(Relation* r, bool printSym);
   const char* relation_print_formula_to_string(Relation* r);
 
   // simplification and satisfiability
-  bool is_upper_bound_satistiable(Relation* r);
+  bool is_upper_bound_satisfiable(Relation* r);
   bool is_lower_bound_satisfiable(Relation* r);
   bool is_satisfiable(Relation* r);
   bool is_obvious_tautology(Relation* r);
@@ -123,12 +124,12 @@ extern "C" {
   Relation* extend_domain2(Relation *r, int n);
   Relation* range_domain1(Relation *r);
   Relation* range_domain2(Relation *r, int n);
-  Relation* set(Relation *r);
-  Relation* extend_set(Relation *r, int n);
-  Relation* daltas1(Relation *r);
-  Relation* daltas2(Relation *r, int n);
+  Relation* extend_set1(Relation *r);
+  Relation* extend_set2(Relation *r, int n);
+  Relation* deltas1(Relation *r);
+  Relation* deltas2(Relation *r, int n);
   Relation* approximate1(Relation *r);
-  Relation* approximate2(Relation *r, int n);
+  Relation* approximate2(Relation *r, int flag);
   Relation* egs_to_geqs1(Relation *r);
   Relation* egs_to_geqs2(Relation *r, bool flag);
   Relation* sample_solution(Relation *r);
@@ -139,9 +140,15 @@ extern "C" {
   Relation* decoupled_convex_hull(Relation* r);
   Relation* affine_hull(Relation* r);
   Relation* linear_hull(Relation* r);
-  Relation* fast_tight_hull(Relation* r);
-  Relation* fast_tight_hull(Relation* r);
-  
+  Relation* conic_hull(Relation* r);
+  Relation* fast_tight_hull(Relation* r1, Relation* r2);
+  Relation* hull0(Relation* r);
+  Relation* hull1(Relation* r, bool flag);
+  Relation* hull2(Relation* r, bool flag, int effort);
+  Relation* hull3(Relation* r1, bool flag, int effort, Relation* r2);
+  Relation* check_for_convex_pairs(Relation* r);
+  Relation* check_for_convex_representation(Relation* r);
+
   // relational function that return boolean values
   bool must_be_subset(Relation* r1, Relation* r2);
   bool might_be_subset(Relation* r1, Relation* r2);

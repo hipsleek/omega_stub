@@ -1,5 +1,5 @@
 /*
- * $Id: omega_stub.cpp,v 1.5 2003-07-04 03:54:28 raz Exp $
+ * $Id: omega_stub.cpp,v 1.6 2003-07-07 04:24:48 raz Exp $
  */
 
 #include <omega.h>
@@ -280,6 +280,11 @@ const char* relation_print_with_subs_to_string(Relation* r, bool printSym)
   return r->print_with_subs_to_string(printSym);
 }
 
+void relation_print_with_subs(Relation* r, bool printSym)
+{
+  printf(r->print_with_subs_to_string(printSym));
+}
+
 const char* relation_print_formula_to_string(Relation* r)
 {
   return r->print_formula_to_string();
@@ -300,63 +305,373 @@ Free_Var_Decl* free_var_decl1(char* name, int arity)
 
 Relation* union_relation(Relation *r1, Relation *r2)
 {
-  Relation* r = new Relation();
-  *r = Union(*r1, *r2);
-  return r;
+  Relation* ro = new Relation();
+  *ro = Union(*r1, *r2);
+  return ro;
 }
 
 Relation* intersection(Relation *r1, Relation *r2)
 {
-  Relation* r = new Relation();
-  *r = Intersection(*r1, *r2);
-  return r;
+  Relation* ro = new Relation();
+  *ro = Intersection(*r1, *r2);
+  return ro;
 }
 
 Relation* composition(Relation *r1, Relation *r2)
 {
-  Relation* r = new Relation();
-  *r = Composition(*r1, *r2);
-  return r;
+  Relation* ro = new Relation();
+  *ro = Composition(*r1, *r2);
+  return ro;
 }
 
 Relation* join(Relation *r1, Relation *r2)
 {
-  Relation* r = new Relation();
-  *r = Join(*r1, *r2);
-  return r;
+  Relation* ro = new Relation();
+  *ro = Join(*r1, *r2);
+  return ro;
 }
 
 Relation* restrict_domain(Relation *r1, Relation *r2)
 {
-  Relation* r = new Relation();
-  *r = Restrict_Domain(*r1, *r2);
-  return r;
+  Relation* ro = new Relation();
+  *ro = Restrict_Domain(*r1, *r2);
+  return ro;
 }
 
 Relation* restrict_range(Relation *r1, Relation *r2)
 {
-  Relation* r = new Relation();
-  *r = Restrict_Range(*r1, *r2);
-  return r;
+  Relation* ro = new Relation();
+  *ro = Restrict_Range(*r1, *r2);
+  return ro;
 }
 
 Relation* difference(Relation *r1, Relation *r2)
 {
-  Relation* r = new Relation();
-  *r = Difference(*r1, *r2);
-  return r;
+  Relation* ro = new Relation();
+  *ro = Difference(*r1, *r2);
+  return ro;
 }
 
 Relation* cross_product(Relation *r1, Relation *r2)
 {
-  Relation* r = new Relation();
-  *r = Cross_Product(*r1, *r2);
-  return r;
+  Relation* ro = new Relation();
+  *ro = Cross_Product(*r1, *r2);
+  return ro;
 }
 
 Relation* gist(Relation *r1, Relation *r2)
 {
-  Relation* r = new Relation();
-  *r = Gist(*r1, *r2);
-  return r;
+  Relation* ro = new Relation();
+  *ro = Gist(*r1, *r2);
+  return ro;
 }
+
+
+// simplification and satisfiability
+bool is_upper_bound_satisfiable(Relation* r)
+{
+  return r->is_upper_bound_satisfiable();
+}
+
+bool is_lower_bound_satisfiable(Relation* r)
+{
+  return r->is_lower_bound_satisfiable();
+}
+
+bool is_satisfiable(Relation* r)
+{
+  return r->is_satisfiable();
+}
+
+bool is_obvious_tautology(Relation* r)
+{
+  return r->is_obvious_tautology();
+}
+
+//bool is_definite_tautology(Relation* r)
+//{
+//  return r->is_definite_tautology();
+//}
+
+bool is_exact(Relation* r)
+{
+  return r->is_exact();
+}
+
+bool is_inexact(Relation* r)
+{
+  return r->is_inexact();
+}
+
+bool is_unknown(Relation* r)
+{
+  return r->is_unknown();
+}
+
+
+// unary relation operations
+Relation* transitive_closure1(Relation *r)
+{
+  Relation* ro = new Relation();
+  *ro = TransitiveClosure(*r);
+  return ro;
+}
+
+Relation* transitive_closure2(Relation *r1, Relation *r2)
+{
+  Relation* ro = new Relation();
+  *ro = TransitiveClosure(*r1, 1, *r2);
+  return ro;
+}
+
+Relation* domain(Relation *r)
+{
+  Relation* ro = new Relation();
+  *ro = Domain(*r);
+  return ro;
+}
+
+Relation* range(Relation *r)
+{
+  Relation* ro = new Relation();
+  *ro = Range(*r);
+  return ro;
+}
+
+Relation* inverse(Relation *r)
+{
+  Relation* ro = new Relation();
+  *ro = Inverse(*r);
+  return ro;
+}
+
+Relation* complement(Relation *r)
+{
+  Relation* ro = new Relation();
+  *ro = Complement(*r);
+  return ro;
+}
+
+Relation* project(Relation *r, Global_Var_ID v)
+{
+  Relation* ro = new Relation();
+  *ro = Project(*r, v);
+  return ro;
+}
+
+Relation* project_sym(Relation *r)
+{
+  Relation* ro = new Relation();
+  *ro = Project_Sym(*r);
+  return ro;
+}
+
+Relation* project_on_sym(Relation *r)
+{
+  Relation* ro = new Relation();
+  *ro = Project_On_Sym(*r);
+  return ro;
+}
+
+Relation* extend_domain1(Relation *r)
+{
+  Relation* ro = new Relation();
+  *ro = Extend_Domain(*r);
+  return ro;
+}
+
+Relation* extend_domain2(Relation *r, int n)
+{
+  Relation* ro = new Relation();
+  *ro = Extend_Domain(*r, n);
+  return ro;
+}
+
+Relation* range_domain1(Relation *r)
+{
+  Relation* ro = new Relation();
+  *ro = Extend_Range(*r);
+  return ro;
+}
+
+Relation* range_domain2(Relation *r, int n)
+{
+  Relation* ro = new Relation();
+  *ro = Extend_Range(*r, n);
+  return ro;
+}
+
+Relation* extend_set1(Relation *r)
+{
+  Relation* ro = new Relation();
+  *ro = Extend_Set(*r);
+  return ro;
+}
+
+Relation* extend_set2(Relation *r, int n)
+{
+  Relation* ro = new Relation();
+  *ro = Extend_Set(*r, n);
+  return ro;
+}
+
+Relation* deltas1(Relation *r)
+{
+  Relation* ro = new Relation();
+  *ro = Deltas(*r);
+  return ro;
+}
+
+Relation* deltas2(Relation *r, int n)
+{
+  Relation* ro = new Relation();
+  *ro = Deltas(*r, n);
+  return ro;
+}
+
+Relation* approximate1(Relation *r)
+{
+  Relation* ro = new Relation();
+  *ro = Approximate(*r);
+  return ro;
+}
+
+Relation* approximate2(Relation *r, int flag)
+{
+  Relation* ro = new Relation();
+  *ro = Approximate(*r, flag);
+  return ro;
+}
+
+Relation* egs_to_geqs1(Relation *r)
+{
+  Relation* ro = new Relation();
+  *ro = EQs_to_GEQs(*r);
+  return ro;
+}
+
+Relation* egs_to_geqs2(Relation *r, bool flag)
+{
+  Relation* ro = new Relation();
+  *ro = EQs_to_GEQs(*r, flag);
+  return ro;
+}
+
+Relation* sample_solution(Relation *r)
+{
+  Relation* ro = new Relation();
+  *ro = Sample_Solution(*r);
+  return ro;
+}
+
+Relation* symbolic_solution(Relation *r)
+{
+  Relation* ro = new Relation();
+  *ro = Symbolic_Solution(*r);
+  return ro;
+}
+
+
+// advance operations
+Relation* convex_hull(Relation* r)
+{
+  Relation* ro = new Relation();
+  *ro = ConvexHull(*r);
+  return ro;
+}
+
+Relation* decoupled_convex_hull(Relation* r)
+{
+  Relation* ro = new Relation();
+  *ro = DecoupledConvexHull(*r);
+  return ro;
+}
+
+Relation* affine_hull(Relation* r)
+{
+  Relation* ro = new Relation();
+  *ro = AffineHull(*r);
+  return ro;
+}
+
+Relation* linear_hull(Relation* r)
+{
+  Relation* ro = new Relation();
+  *ro = LinearHull(*r);
+  return ro;
+}
+
+Relation* conic_hull(Relation* r)
+{
+  Relation* ro = new Relation();
+  *ro = ConicHull(*r);
+  return ro;
+}
+
+Relation* fast_tight_hull(Relation* r1, Relation* r2)
+{
+  Relation* ro = new Relation();
+  *ro = FastTightHull(*r1, *r2);
+  return ro;
+}
+
+Relation* hull0(Relation* r)
+{
+  Relation* ro = new Relation();
+  *ro = Hull(*r);
+  return ro;
+}
+
+Relation* hull1(Relation* r, bool flag)
+{
+  Relation* ro = new Relation();
+  *ro = Hull(*r, flag);
+  return ro;
+}
+
+Relation* hull2(Relation* r, bool flag, int effort)
+{
+  Relation* ro = new Relation();
+  *ro = Hull(*r, flag, effort);
+  return ro;
+}
+
+Relation* hull3(Relation* r1, bool flag, int effort, Relation* r2)
+{
+  Relation* ro = new Relation();
+  *ro = Hull(*r1, flag, effort, *r2);
+  return ro;
+}
+
+Relation* check_for_convex_pairs(Relation* r)
+{
+  Relation* ro = new Relation();
+  *ro = CheckForConvexPairs(*r);
+  return ro;
+}
+
+Relation* check_for_convex_representation(Relation* r)
+{
+  Relation* ro = new Relation();
+  *ro = CheckForConvexRepresentation(*r);
+  return ro;
+}
+
+
+// relational function that return boolean values
+bool must_be_subset(Relation* r1, Relation* r2)
+{
+  return Must_Be_Subset(*r1, *r2);
+}
+
+bool might_be_subset(Relation* r1, Relation* r2)
+{
+  return Might_Be_Subset(*r1, *r2);
+}
+
+bool is_obvious_subset(Relation* r1, Relation* r2)
+{
+  return Is_Obvious_Subset(*r1, *r2);
+}
+
+
