@@ -1,4 +1,4 @@
-{- $Id: Omega_stub.hs,v 1.4 2003-07-07 04:25:49 raz Exp $ -}
+{- $Id: Omega_stub.hs,v 1.5 2003-07-22 07:52:42 raz Exp $ -}
 
 module Omega_stub where
 
@@ -24,9 +24,14 @@ type EQ_Handle = Constraint_Handle
 type Stride_Handle = Constraint_Handle
 
 data Variable = Variable
---type Variable_ID = Ptr Var_Decl
 
 type Argument_Touple = CInt
+
+data DNF_Iterator = DNF_Iterator
+data EQ_Iterator = EQ_Iterator
+data GEQ_Iterator = GEQ_Iterator
+data Constr_Vars_Iter = Constr_Vars_Iter
+data Variable_Iterator = Variable_Iterator
 
 foreign import ccall relation_new0 :: IO (Ptr Relation)
 foreign import ccall relation_new1 :: CInt -> IO (Ptr Relation)
@@ -46,6 +51,11 @@ foreign import ccall relation_get_local_global2 :: (Ptr Relation) -> Ptr Variabl
 foreign import ccall relation_name_set_var :: (Ptr Relation) -> CInt -> CString -> IO ()
 foreign import ccall relation_name_input_var :: (Ptr Relation) -> CInt -> CString -> IO ()
 foreign import ccall relation_name_output_var :: (Ptr Relation) -> CInt -> CString -> IO ()
+
+foreign import ccall relation_is_set :: (Ptr Relation) -> IO (Bool)
+foreign import ccall relation_n_inp :: (Ptr Relation) -> IO (CInt)
+foreign import ccall relation_n_out :: (Ptr Relation) -> IO (CInt)
+foreign import ccall relation_n_set :: (Ptr Relation) -> IO (CInt)
 
 foreign import ccall relation_add_and :: (Ptr Relation) -> IO (Ptr F_And)
 foreign import ccall relation_add_or :: (Ptr Relation) -> IO (Ptr F_Or)
@@ -169,3 +179,68 @@ foreign import ccall must_be_subset :: (Ptr Relation) -> (Ptr Relation) -> IO (B
 foreign import ccall might_be_subset :: (Ptr Relation) -> (Ptr Relation) -> IO (Bool)
 foreign import ccall is_obvious_subset :: (Ptr Relation) -> (Ptr Relation) -> IO (Bool)
 
+-- query
+foreign import ccall dnf_iterator_new1 :: (Ptr Relation) -> IO (Ptr DNF_Iterator)
+foreign import ccall dnf_iterator_new3 :: (Ptr Relation) -> CInt -> CInt -> IO (Ptr DNF_Iterator)
+foreign import ccall dnf_iterator_next :: (Ptr DNF_Iterator) -> IO ()
+foreign import ccall dnf_iterator_more :: (Ptr DNF_Iterator) -> IO (Bool)
+--DNF_Iterator* dnf_iterator_new1(Relation* r);
+--DNF_Iterator* dnf_iterator_new3(Relation* r, int rdt_conjs, int rdt_constrs);
+--void dnf_iterator_next(DNF_Iterator* dnfi);
+
+foreign import ccall eq_iterator_new :: (Ptr DNF_Iterator) -> IO (Ptr EQ_Iterator)
+foreign import ccall eq_iterator_next :: (Ptr EQ_Iterator) -> IO ()
+foreign import ccall eq_iterator_more :: (Ptr EQ_Iterator) -> IO (Bool)
+foreign import ccall eq_constr_iter_new :: (Ptr EQ_Iterator) -> IO (Ptr Constr_Vars_Iter)
+--EQ_Iterator* eq_iterator_new(DNF_Iterator* dnfi);
+--void eq_iterator_next(EQ_Iterator* eq);
+--Constr_Vars_Iter* eq_constr_iter_new(EQ_Iterator* eq);
+
+foreign import ccall geq_iterator_new :: (Ptr DNF_Iterator) -> IO (Ptr GEQ_Iterator)
+foreign import ccall geq_iterator_next :: (Ptr GEQ_Iterator) -> IO ()
+foreign import ccall geq_iterator_more :: (Ptr GEQ_Iterator) -> IO (Bool)
+foreign import ccall geq_constr_iter_new :: (Ptr GEQ_Iterator) -> IO (Ptr Constr_Vars_Iter)
+--GEQ_Iterator* geq_iterator_new(DNF_Iterator* dnfi);
+--void geq_iterator_next(GEQ_Iterator* geq);
+--Constr_Vars_Iter* geq_constr_iter_new(GEQ_Iterator* geq);
+
+foreign import ccall constr_iter_get_variable :: (Ptr Constr_Vars_Iter) -> IO (Ptr Variable)
+foreign import ccall constr_iter_get_coef :: (Ptr Constr_Vars_Iter) -> IO (CInt)
+foreign import ccall constr_iter_next :: (Ptr Constr_Vars_Iter) -> IO ()
+foreign import ccall constr_iter_more :: (Ptr Constr_Vars_Iter) -> IO (Bool)
+--Variable_ID constr_iter_get_variable(Constr_Vars_Iter* cvi);
+--int constr_iter_get_coef(Constr_Vars_Iter* cvi);
+--void constr_iter_next(Constr_Vars_Iter* cvi)
+--bool constr_iter_more(Constr_Vars_Iter* cvi);
+
+
+foreign import ccall var_iter_new :: (Ptr DNF_Iterator) -> IO (Ptr Variable_Iterator)
+foreign import ccall var_iter_next :: (Ptr Variable_Iterator) -> IO ()
+foreign import ccall var_iter_more :: (Ptr Variable_Iterator) -> IO (Bool)
+foreign import ccall var_iter_get_variable :: (Ptr Variable_Iterator) -> IO (Ptr Variable)
+--Variable_Iterator* var_iter_new(DNF_Iterator* dnfi);
+--void var_iter_next(Variable_Iterator* vi);
+--Variable_ID var_iter_get_variable(Variable_Iterator* vi);
+
+foreign import ccall eq_get_const :: (Ptr EQ_Iterator) -> IO (CInt)
+foreign import ccall geq_get_const :: (Ptr EQ_Iterator) -> IO (CInt)
+--int eq_get_const(GEQ_Iterator* eq);
+--int geq_get_const(GEQ_Iterator* qi);
+
+foreign import ccall relation_setup_names :: (Ptr Relation) -> IO ()
+foreign import ccall relation_number_of_conjuncts :: (Ptr Relation) -> IO (CInt)
+
+-- experimental stuff
+foreign import ccall query_experiment :: (Ptr Relation) -> IO ()
+
+-- simplify
+foreign import ccall relation_simplify1 :: (Ptr Relation) -> IO ()
+foreign import ccall relation_simplify3 :: (Ptr Relation) -> CInt -> CInt -> IO ()
+
+-- variable
+foreign import ccall variable_name :: (Ptr Variable) -> IO (CString)
+foreign import ccall variable_kind :: (Ptr Variable) -> IO (CInt)
+foreign import ccall variable_get_position :: (Ptr Variable) -> IO (CInt)
+--const char* variable_get_name(Variable_ID v);
+--Var_Kind variable_kind(Variable_ID v);
+--int variable_get_position(Variable_ID v);

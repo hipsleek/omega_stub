@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.4 2003-05-26 05:10:56 raz Exp $
+# $Id: Makefile,v 1.5 2003-07-22 07:52:39 raz Exp $
 
 include ../Makefile.rules
 
@@ -11,13 +11,12 @@ exit: ../lib/Exit.o
 clean:
 	rm -f *.o *~ ../lib/*.o
 
-../lib/%.o: %.cpp
-	$(CC) $(CFLAGS) $(INCS) -c $< -o ../lib/$@
-
-
 ../lib/Exit.o: $(BASEDIR)/basic/src/Exit.c
 	$(CC) $(CFLAGS) $(INCS) -c $(BASEDIR)/basic/src/Exit.c -o $@
 
 
-omega_stub.o: omega_stub.cpp ../include/omega_stub.h
+../lib/omega_stub.o: omega_stub.cpp ../include/omega_stub.h ../include/util.h
+	$(CC) $(CFLAGS) $(INCS) -c $< -o ../lib/$@
 
+#../lib/%.o: %.cpp
+#	$(CC) $(CFLAGS) $(INCS) -c $< -o ../lib/$@

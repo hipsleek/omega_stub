@@ -1,9 +1,12 @@
 /*
- * $Id: omega_stub.cpp,v 1.7 2003-07-10 06:49:16 raz Exp $
+ * $Id: omega_stub.cpp,v 1.8 2003-07-22 07:52:39 raz Exp $
  */
 
 #include <omega.h>
 #include "../include/omega_stub.h"
+#include "../include/util.h"
+
+#include <stdio.h>
 
 Relation* relation_new0()
 {
@@ -22,7 +25,10 @@ Relation* relation_new2(int n_input, int n_output)
 
 Relation* relation_copy(Relation* r)
 {
-  return new Relation(*r);
+  //  return new Relation(*r);
+  Relation *ro = new Relation();
+  *ro = copy(*r);
+  return ro;
 }
 
 
@@ -129,8 +135,8 @@ F_Forall* relation_add_forall(Relation* r)
 
 F_Exists* relation_add_exists(Relation* r)
 {
-  return r->add_exists();
-}
+  return r->add_exists();}
+
 
 F_And* f_and_add_and(F_And* f)
 {
@@ -703,3 +709,239 @@ bool is_obvious_subset(Relation* r1, Relation* r2)
 }
 
 
+// query
+DNF_Iterator* dnf_iterator_new1(Relation* r)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: dnf_iterator_new1\n");
+  return new DNF_Iterator(r->query_DNF());
+}
+
+DNF_Iterator* dnf_iterator_new3(Relation* r, int rdt_conjs, int rdt_constrs)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: dnf_iterator_new3\n");
+  return new DNF_Iterator(r->query_DNF(rdt_conjs, rdt_constrs));
+}
+
+void dnf_iterator_next(DNF_Iterator* dnfi)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: dnf_iterator_next\n");
+ (*dnfi)++;
+}
+
+bool dnf_iterator_more(DNF_Iterator* dnfi)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: dnf_iterator_more\n");
+  return (*dnfi);
+}
+
+
+EQ_Iterator* eq_iterator_new(DNF_Iterator* dnfi)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: eq_iterator_new\n");
+  return new EQ_Iterator((*(*dnfi))->EQs());
+}
+
+void eq_iterator_next(EQ_Iterator* eqi)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: eq_iterator_next\n");
+  (*eqi)++;
+}
+
+bool eq_iterator_more(EQ_Iterator* eqi)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: eq_iterator_more\n");
+  return (*eqi);
+}
+
+Constr_Vars_Iter* eq_constr_iter_new(EQ_Iterator* eqi)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: eq_constr_iter_new\n");
+  return new Constr_Vars_Iter(*(*eqi));
+}
+
+
+GEQ_Iterator* geq_iterator_new(DNF_Iterator* dnfi)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: geq_iterator_new\n");
+  return new GEQ_Iterator((*(*dnfi))->GEQs());
+}
+
+void geq_iterator_next(GEQ_Iterator* geqi)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: geq_iterator_next\n");
+  (*geqi)++;
+}
+
+bool geq_iterator_more(GEQ_Iterator* geqi)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: eq_iterator_more\n");
+  return (*geqi);
+}
+
+Constr_Vars_Iter* geq_constr_iter_new(GEQ_Iterator* geqi)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: geq_constr_iter_new\n");
+  return new Constr_Vars_Iter(*(*geqi));
+}
+
+
+
+Variable_ID constr_iter_get_variable(Constr_Vars_Iter* cvi)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: constr_iter_get_variable\n");
+  return (*(*cvi)).var;
+}
+
+int constr_iter_get_coef(Constr_Vars_Iter* cvi)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: constr_iter_get_coef\n");
+  return (*(*cvi)).coef;
+}
+
+void constr_iter_next(Constr_Vars_Iter* cvi)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: constr_iter_next\n");
+  (*cvi)++;
+}
+
+bool constr_iter_more(Constr_Vars_Iter* cvi)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: constr_iter_more\n");
+  return (*cvi);
+}
+
+
+
+Variable_Iterator* var_iter_new(DNF_Iterator* dnfi)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: var_iter_new\n");
+  return new Variable_Iterator(*((*(*dnfi))->variables()));
+}
+
+void var_iter_next(Variable_Iterator* vi)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: var_iter_next\n");
+  (*vi)++;
+}
+
+bool var_iter_more(Variable_Iterator* vi)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: var_iter_more\n");
+  return (*vi);
+}
+
+Variable_ID var_iter_get_variable(Variable_Iterator* vi)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: var_iter_get_variable\n");
+  return (*(*vi));
+}
+
+int eq_get_const(EQ_Iterator* eq)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: eq_get_const\n");
+  return (*(*eq)).get_const();
+}
+
+int geq_get_const(GEQ_Iterator* qi)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: geq_get_const\n");
+  return (*(*qi)).get_const();
+}
+
+void relation_setup_names(Relation* r)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: relation_set_names\n");
+  r->setup_names();
+}
+
+
+void query_experiment(Relation* r)
+{
+  // without setup_names enumeration will fail with an ugly assert
+  r->setup_names();
+  printf("Experiment1:\n");
+  for (DNF_Iterator di(r->query_DNF()); di; di++)
+    {
+      for (EQ_Iterator ei = (*di)->EQs(); ei; ei++)
+	{
+	  printf("EQ:");
+	  for (Constr_Vars_Iter cvi(*ei); cvi; cvi++)
+	    printf("(%s/%d * %d)", (*cvi).var->char_name(), (*cvi).var->kind(), (*cvi).coef);
+	  printf(" + %d = 0\n",(*ei).get_const());
+	}
+      for (GEQ_Iterator qi = (*di)->GEQs(); qi; qi++)
+	{
+	  printf("GEQ:");
+	  for (Constr_Vars_Iter cvi(*qi); cvi; cvi++)
+	    printf("(%s/%d * %d)", (*cvi).var->char_name(), (*cvi).var->kind(), (*cvi).coef);
+	  printf(" + %d >= 0\n",(*qi).get_const());
+	}
+      printf("\n");
+    }
+  printf("Experiment2:\n");
+  for (DNF_Iterator di(r->query_DNF()); di; di++)
+    {
+      for (Constraint_Iterator ci = (*di)->constraints(); ci; ci++)
+	{
+	  printf("Constraint: %d", (*ci).get_const());
+	}
+      printf("\n");
+    }
+}
+
+void relation_simplify1(Relation* r)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: relation_simplify1\n");
+  r->simplify();
+}
+
+void relation_simplify3(Relation* r, int rdt_conjs, int rdt_constrs)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: relation_simplify2\n");
+  r->simplify(rdt_conjs, rdt_constrs);
+}
+
+int relation_number_of_conjuncts(Relation* r)
+{
+  OMEGA_STUB_DEBUG_MSG("DEBUG: relation_number_of_conjuncts\n");
+  return r->number_of_conjuncts();
+}
+
+
+
+const char* variable_name(Variable_ID v)
+{
+  return v->char_name();
+}
+
+Var_Kind variable_kind(Variable_ID v)
+{
+  return v->kind();
+}
+
+int variable_get_position(Variable_ID v)
+{
+  return v->get_position();
+}
+
+/*     for(DNF_Iterator di(R.query_DNF()); di; di++) */
+/*         { */
+/*         printf("In next conjunct,\n"); */
+/*         for(EQ_Iterator ei = (*di)->EQs(); ei; ei++) */
+/*             { */
+/*             printf("  In next equality constraint,\n"); */
+/*             for(Constr_Vars_Iter cvi(*ei); cvi; cvi++) */
+/*                 printf("    Variable \%s has coefficient \%d\n", */
+/*                        (*cvi).var->char_name(), */
+/*                        (*cvi).coef); */
+/*             } */
+/*         for(GEQ_Iterator gi = (*di)->GEQs(); gi; gi++) */
+/*             { */
+/*             printf("  In next inequality constraint,\n"); */
+/*             for(Constr_Vars_Iter cvi(*gi); cvi; cvi++) */
+/*                 printf("    Variable \%s has coefficient \%d\n", */
+/*                        (*cvi).var->char_name(), */
+/*                        (*cvi).coef); */
+/*             } */
+/*         printf("\n"); */
+/*         } */

@@ -1,5 +1,5 @@
 /*
- * $Id: omega_stub_types.h,v 1.2 2003-05-12 11:38:37 raz Exp $
+ * $Id: omega_stub_types.h,v 1.3 2003-07-22 07:52:34 raz Exp $
  */
 
 #ifndef _OMEGA_STUB_TYPES_H
@@ -29,5 +29,9 @@ extern "C" {
   } Argument_Tuple;
   typedef int coef_t;
 
+  typedef void DNF;
+  typedef void EQ_Iterator;
+  typedef void GEQ_Iterator;
+  
 }
 #endif
