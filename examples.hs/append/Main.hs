@@ -1,7 +1,7 @@
 ---
 -- Fix point for "append"
 --
--- $Id: Main.hs,v 1.2 2003-07-28 05:10:59 raz Exp $
+-- $Id: Main.hs,v 1.3 2003-07-28 15:57:19 raz Exp $
 --
 
 
@@ -24,6 +24,7 @@ module Main(main) where
 
 import Omega
 import Omega_types
+import Omega_parser
 import Foreign
 import Foreign.C
 import qualified Omega_stub
@@ -33,17 +34,17 @@ import Prelude hiding ((&&),(||))
 main = do
     print "[START]"
 
-    let	append_0 = RFormula (\a -> RFormula (\b -> RFormula (\c -> Formula ( (a `eq` (0::Int)) && (b `eq` c) ))))
-    let	append_r = RFormula (\a -> RFormula (\b -> RFormula (\c -> RFormula (\a' -> RFormula (\b' -> RFormula (\c' -> Formula (
-                                                                       (a `geq` (0::Int)) && (b `geq` (0::Int)) && (c `geq` (0::Int)) &&
-								       (a' `geq` (0::Int)) && (b' `geq` (0::Int)) && (c' `geq` (0::Int)) &&
-								       (a' `eq` (a `plus` (- (1::Int)))) && (b' `eq` b) && (c `eq` (c' `plus` (1::Int))) )))))))
+    let	append_0 = extract_rformula "{ [a,b,c] a = 0 && b = c }"
+    let	append_r = extract_rformula "{ [a,b,c] -> [a',b',c'] a >= 0 && b >= 0 && c >= 0 && a' >= 0 && b >= 0 && c' >= 0 && a' = a - 1 && b' = b && c = c' + 1 }"
+
+--    print ("append_0: " ++ (show append_0) ++ "\n")
+--    print ("append_r: " ++ (show append_r) ++ "\n")
 
     (append_ptr_0, append_f_0) <- build_relation (["a", "b", "c"], [], append_0)
     (append_ptr_r, append_f_r) <- build_relation (["a", "b", "c"], ["a'", "b'", "c'"], append_r)
 
---    print (show append_f_0)
---    print (show append_f_r)
+--    print ("append_f_0: " ++ (show append_f_0) ++ "\n")
+--    print ("append_f_r: " ++ (show append_f_r) ++ "\n")
 
     eval_relation append_ptr_0 append_f_0
     eval_relation append_ptr_r append_f_r
@@ -51,19 +52,16 @@ main = do
     Omega_stub.relation_print append_ptr_0
     Omega_stub.relation_print append_ptr_r
     tc_append_ptr_r <- Omega_stub.transitive_closure1 append_ptr_r
+--    putStr "tc_append_ptr_r: \n"
     Omega_stub.relation_print tc_append_ptr_r
 
-
-    let	append_r' = RFormula (\a -> RFormula (\b -> RFormula (\c -> Formula (
-                                                                       ( (a `eq` (0::Int)) && (b `eq` c) ) ||
-								       Exists (\a' -> Exists (\b' -> Exists (\c' ->
-								           (a `geq` (0::Int)) && ((a `plus` (1::Int)) `geq` a') && ((c `plus` a') `geq` a) &&
-									   (b `geq` (0::Int)) && (b' `eq` b) && (c' `eq` (c `minus` a `plus` a')) &&
-									   (a' `eq` (0::Int)) && (b' `eq` c')
-			     )))))))
+--    append_r' <- relation_extract_rformula tc_append_ptr_r
+    let append_r' = extract_rformula "{[a,b,c] (a = 0 && b = c) || exists (a', b', c' : b' = b && a+c' = a'+c && 0 <= a' && a' + 1 <= a && a <= a'+c && 0 <= b && a' = 0 && b' = c') }"
+--    putStr ("append_r': " ++ (show append_r') ++ "\n")
     (append_ptr_r', append_f_r') <- build_relation (["a", "b", "c"], [], append_r')
     eval_relation append_ptr_r' append_f_r'
     Omega_stub.relation_print append_ptr_r'
+
     hull_append_r' <- Omega_stub.hull0 append_ptr_r'
     Omega_stub.relation_print hull_append_r'
 
