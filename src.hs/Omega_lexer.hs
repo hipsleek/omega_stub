@@ -43,6 +43,7 @@ isVarChar c = (isAlphaNum c) || (c == '\'') || (c == '_')
 omega_lexVar cs =
    case span isVarChar cs of
       	("exists",rest) -> TokenExists  : omega_lexer rest
+      	("Exists",rest) -> TokenExists  : omega_lexer rest
       	("forall",rest) -> TokenForall  : omega_lexer rest
       	("union",rest)  -> TokenUnion   : omega_lexer rest
       	("or",rest)     -> TokenOr      : omega_lexer rest

@@ -37,6 +37,13 @@ gist (ins1,outs1,rf1) (ins2,outs2,rf2) =
 --  putStrLn ("#GIST#" ++ show rf) >>
   return rf
 
+hull0 :: Relation -> IO RFormula
+hull0 (ins, outs, rf) =
+    do (ptr_r, f) <- build_relation (ins, outs, rf)
+       eval_relation ptr_r f
+       ptr_r' <- Omega_stub.hull0 ptr_r
+       relation_extract_rformula ptr_r'
+
 convex_hull :: Relation -> IO RFormula
 convex_hull (ins, outs, rf) =
     do (ptr_r, f) <- build_relation (ins, outs, rf)
