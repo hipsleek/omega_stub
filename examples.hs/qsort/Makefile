@@ -11,6 +11,7 @@ qsort: Main.hs
 		../../lib.hs/Omega_stub.o				\
 		../../lib.hs/Omega_util.o				\
 		../../lib.hs/Omega.o					\
+		../../lib.hs/PFOmega.o					\
 		../../lib.hs/Omega_types.o				\
 		../../lib.hs/Omega_tokens.o				\
 		../../lib.hs/Omega_lexer.o				\
