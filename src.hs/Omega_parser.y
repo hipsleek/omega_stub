@@ -71,6 +71,7 @@ forall_vars_in_formula (v_name:v_names) f = Forall (\v -> (replace_var_in_formul
 %left '=' geq leq
 %left '+' '-'
 %left '*' '/'
+%left NEG
 %left exists
 
 %%
@@ -130,6 +131,7 @@ Expr : Expr '+' Expr { $1 ++ $3 }
      | '(' Expr ')'  { $2 }
      | int var       { [ Coef ($2, nullPtr) $1 ] }
      | int           { [ Const $1 ] }
+     | '-' int %prec NEG { [ Const (- $2)] }
      | var           { [ Coef ($1, nullPtr) 1 ]}
 
 {
