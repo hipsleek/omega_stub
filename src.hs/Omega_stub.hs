@@ -1,4 +1,4 @@
-{- $Id: Omega_stub.hs,v 1.1 2003-05-26 05:53:53 raz Exp $ -}
+{- $Id: Omega_stub.hs,v 1.2 2003-06-23 09:56:19 raz Exp $ -}
 
 module Omega_stub where
 
@@ -10,12 +10,12 @@ data Formula = Formula
 type F_Declaration = Formula
 
 
-type F_And = Formula
-type F_Or = Formula
-type F_Not = Formula
+data F_And 
+data F_Or 
+data F_Not 
 
-type F_Exists = F_Declaration
-type F_Forall = F_Declaration
+data F_Exists
+data F_Forall
 
 data Constraint_Handle = Constraint_Handle
 
@@ -63,8 +63,33 @@ foreign import ccall f_and_add_GEQ :: (Ptr F_And) -> IO (Ptr GEQ_Handle)
 foreign import ccall f_and_add_EQ :: (Ptr F_And) -> IO (Ptr EQ_Handle)
 foreign import ccall f_and_add_stride :: (Ptr F_And) -> CInt -> IO (Ptr Stride_Handle)
 
+foreign import ccall f_or_add_and :: (Ptr F_Or) -> IO (Ptr F_And)
+foreign import ccall f_or_add_or :: (Ptr F_Or) -> IO (Ptr F_Or)
+foreign import ccall f_or_add_not :: (Ptr F_Or) -> IO (Ptr F_Not)
+foreign import ccall f_or_add_forall :: (Ptr F_Or) -> IO (Ptr F_Forall)
+foreign import ccall f_or_add_exists :: (Ptr F_Or) -> IO (Ptr F_Exists)
+
+foreign import ccall f_not_add_and :: (Ptr F_Not) -> IO (Ptr F_And)
+foreign import ccall f_not_add_or :: (Ptr F_Not) -> IO (Ptr F_Or)
+foreign import ccall f_not_add_not :: (Ptr F_Not) -> IO (Ptr F_Not)
+foreign import ccall f_not_add_forall :: (Ptr F_Not) -> IO (Ptr F_Forall)
+foreign import ccall f_not_add_exists :: (Ptr F_Not) -> IO (Ptr F_Exists)
+
+foreign import ccall f_forall_add_and :: (Ptr F_Forall) -> IO (Ptr F_And)
+foreign import ccall f_forall_add_or :: (Ptr F_Forall) -> IO (Ptr F_Or)
+foreign import ccall f_forall_add_not :: (Ptr F_Forall) -> IO (Ptr F_Not)
+foreign import ccall f_forall_add_forall :: (Ptr F_Forall) -> IO (Ptr F_Forall)
+foreign import ccall f_forall_add_exists :: (Ptr F_Forall) -> IO (Ptr F_Exists)
+
+foreign import ccall f_exists_add_and :: (Ptr F_Exists) -> IO (Ptr F_And)
+foreign import ccall f_exists_add_or :: (Ptr F_Exists) -> IO (Ptr F_Or)
+foreign import ccall f_exists_add_not :: (Ptr F_Exists) -> IO (Ptr F_Not)
+foreign import ccall f_exists_add_forall :: (Ptr F_Exists) -> IO (Ptr F_Forall)
+foreign import ccall f_exists_add_exists :: (Ptr F_Exists) -> IO (Ptr F_Exists)
+
 --foreign import ccall f_declare :: (F_Declaration f) => (Ptr f) -> CString -> IO (Variable_ID)
-foreign import ccall f_declare :: (Ptr F_Declaration) -> CString -> IO (Ptr Variable)
+foreign import ccall f_forall_declare :: (Ptr F_Forall) -> CString -> IO (Ptr Variable)
+foreign import ccall f_exists_declare :: (Ptr F_Exists) -> CString -> IO (Ptr Variable)
 
 --foreign import ccall constraint_handler_update_const :: (Constraint_Handle ch) => (Ptr ch) -> CInt -> IO ()
 --foreign import ccall constraint_handler_update_coef :: (Constraint_Handle ch) => (Ptr ch) -> CInt -> IO ()
