@@ -1,7 +1,7 @@
 ---
 -- Fix point for "qsort"
 --
--- $Id: Main.hs,v 1.3 2003-08-04 09:13:31 raz Exp $
+-- $Id: Main.hs,v 1.4 2003-08-19 12:12:17 raz Exp $
 --
 
 module Main(main) where
@@ -24,17 +24,25 @@ bup_one_step r1 rec i =
                              (f_apply rec [a1, b1, a2, b2, a3, b3]) Omega.&&
 			     (f_apply r1 [a2, b2]) Omega.&&
 			     (f_apply r1 [a3, b3]) ))) ))))
---       putStr ("r"++ (show i) ++": " ++ (rformula_print_formula_to_string r2 ["a", "b"]) ++ "\n") 
---       rformula_print (["a", "b"], [], r2)
---       r2_subset_r1 <- subset (["a", "b"], [], r2) (["a", "b"], [], r1)
---       putStr ("r"++ (show i) ++" subset r"++ (show (i - 1)) ++": "++ (show r2_subset_r1) ++ "\n")
---       return r2
        ch_r2 <- convex_hull (["a", "b"], [], r2)
        putStr ("ch_r"++ (show i) ++": " ++ (rformula_print_formula_to_string ch_r2 ["a", "b"]) ++ "\n")
        ch_r2_subset_r1 <- subset (["a", "b"], [], ch_r2) (["a", "b"], [], r1)
        putStr ("ch_r"++ (show i) ++" subset r"++ (show (i - 1)) ++": "++ (show ch_r2_subset_r1) ++ "\n")
        return ch_r2
 
+tdown_one_step :: RFormula -> RFormula -> Int -> IO RFormula
+tdown_one_step r1 rec i =
+    do let r2 = RFormula (\a1 -> RFormula (\b1 -> RFormula (\a2 -> RFormula (\b2 -> Formula (
+		        (f_apply r1 [a1, b1, a2, b2]) Omega.||
+                         Exists (\a3 -> Exists (\b3 -> Exists (\a4 -> Exists (\b4 ->
+                             (f_apply rec [a1, b1, a3, b3, a4, b4]) Omega.&&
+			     ((f_apply r1 [a3, b3, a2, b2]) Omega.||
+			      (f_apply r1 [a4, b4, a2, b2])) )))) )))))
+       ch_r2 <- convex_hull (["a", "b"], ["a'", "b'"], r2)
+       putStr ("ch_r"++ (show i) ++": " ++ (rformula_print_formula_to_string ch_r2 ["a", "b", "a'", "b'"]) ++ "\n")
+       ch_r2_subset_r1 <- subset (["a", "b"], ["a'", "b'"], ch_r2) (["a", "b"], ["a'", "b'"], r1)
+       putStr ("ch_r"++ (show i) ++" subset r"++ (show (i - 1)) ++": "++ (show ch_r2_subset_r1) ++ "\n")
+       return ch_r2
 
 main = do
     putStr "[START]\n"
@@ -53,12 +61,6 @@ main = do
 							      (b1 `eq` ac )) ))))) ] )))))))
 
     putStr "Bottom-up:\n"
---    putStr ("part: " ++ (rformula_print_formula_to_string part ["a", "b", "c"]) ++ "\n")
---    putStr ("append: " ++ (rformula_print_formula_to_string append ["a", "b", "c"]) ++ "\n")
---    putStr ("qsort_0: " ++ (rformula_print_formula_to_string qsort_0 ["a", "b"]) ++ "\n")
---    putStr ("qsort_r: " ++ (rformula_print_formula_to_string qsort_r ["a1", "b1", "a2", "b2", "a3", "b3"]) ++ "\n")
---    rformula_print (["a", "b"], [], qsort_0)
---    rformula_print (["a1", "b1"], ["a2", "b2", "a3", "b3"], qsort_r)
     bup_qsort_1 <- bup_one_step qsort_0 qsort_r 1
     bup_qsort_2 <- bup_one_step bup_qsort_1 qsort_r 2
     bup_qsort_3 <- bup_one_step bup_qsort_2 qsort_r 3
@@ -67,6 +69,20 @@ main = do
 
     let bup_append_6 = extract_rformula "{ [a,b] b = a && b >= 0 }"
     bup_append_7 <- bup_one_step bup_append_6 qsort_r 7
+
+    putStr "Top-down:\n"
+    let tdown_qsort_0 = RFormula (\a1 -> RFormula (\b1 -> RFormula (\a2 -> RFormula (\b2 -> Formula ( And [
+                         Exists (\a3 -> Exists (\b3 -> 
+                             (f_apply qsort_r [a1, b1, a2, b2, a3, b3]) Omega.||
+                             (f_apply qsort_r [a1, b1, a3, b3, a2, b2]) )) ] )))))
+
+    tdown_qsort_1 <- tdown_one_step tdown_qsort_0 qsort_r 1
+    tdown_qsort_2 <- tdown_one_step tdown_qsort_1 qsort_r 2
+    tdown_qsort_3 <- tdown_one_step tdown_qsort_2 qsort_r 3
+
+    let tdown_qsort = RFormula (\a1 -> RFormula (\b1 -> Formula ( And [
+                         Exists (\a2 -> Exists (\b2 -> (f_apply tdown_qsort_3 [a1, b1, a2, b2]) Omega.&& (f_apply qsort_0 [a2, b2]) )) ] )))
+    rformula_print (["a", "b"], [], tdown_qsort)
 
     putStr "[DONE]\n"
 
