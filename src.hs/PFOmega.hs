@@ -17,6 +17,9 @@ instance Function RFormula [Variable] RFormula where
 
 to_formula :: RFormula -> Formula
 to_formula (Formula f) = f	  
+to_formula (RFormula rf) =
+    let (str, _) = omega_show (RFormula rf) 1
+    in error ("ERROR: You are trying to to_Formula-ing a RFormula not implemented!\n" ++ str)
 
 f_apply :: RFormula -> [Variable] -> Formula
 f_apply r vars = to_formula (apply r vars)
@@ -48,7 +51,7 @@ difference (ins1, outs1, rf1) (ins2, outs2, rf2) =
 
 rformula_print :: Relation -> IO ()
 rformula_print (ins, outs, rf) =
-    do putStr ((show rf) ++ "\n")
+    do -- putStr ((show rf) ++ "\n")
        (ptr_r, f) <- build_relation (ins, outs, rf)
        eval_relation ptr_r f
 --       Omega_stub.relation_print ptr_r
@@ -64,7 +67,9 @@ convex_hull :: Relation -> IO RFormula
 convex_hull (ins, outs, rf) =
     do (ptr_r, f) <- build_relation (ins, outs, rf)
        eval_relation ptr_r f
+--       Omega_stub.relation_print ptr_r
        ptr_r' <- Omega_stub.convex_hull ptr_r
+--       Omega_stub.relation_print ptr_r'
        relation_extract_rformula ptr_r'
 
 
