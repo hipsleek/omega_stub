@@ -1,20 +1,27 @@
 #include <omega.h>
 #include "../include/omega_stub.h"
 
-Relation* relation_cons0()
+Relation* relation_new0()
 {
   return new Relation();
 }
 
-Relation* relation_cons1(int n_input)
+Relation* relation_new1(int n_input)
 {
   return new Relation(n_input);
 }
 
-Relation* relation_cons2(int n_input, int n_output)
+Relation* relation_new2(int n_input, int n_output)
 {
   return new Relation(n_input, n_output);
 }
+
+
+void relation_delete(Relation* r)
+{
+  delete r;
+}
+
 
 void relation_finalize(Relation* r)
 {
