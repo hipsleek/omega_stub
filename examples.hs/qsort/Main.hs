@@ -1,7 +1,7 @@
 ---
 -- Fix point for "qsort"
 --
--- $Id: Main.hs,v 1.2 2003-08-03 15:05:00 raz Exp $
+-- $Id: Main.hs,v 1.3 2003-08-04 09:13:31 raz Exp $
 --
 
 module Main(main) where
@@ -39,7 +39,7 @@ bup_one_step r1 rec i =
 main = do
     putStr "[START]\n"
 
-    let part = extract_rformula "{ [a]->[b,c] a = b + c && a >= 0 }"
+    let part = extract_rformula "{ [a]->[b,c] a = b + c && a >= 0 && b >= 0 && c >= 0}"
 	append = extract_rformula "{ [a,b]->[c] c = a + b && a >= 0 && b >= 0 }"
 	qsort_0 = extract_rformula "{ [a,b] a = 0 && b = 0 }"
 	qsort_r = RFormula (\a1 -> RFormula (\b1 -> RFormula (\a2 -> RFormula (\b2 -> RFormula (\a3 -> RFormula (\b3 -> Formula ( And [
@@ -50,7 +50,7 @@ main = do
 			Exists (\aa -> Exists (\ab -> Exists (\ac -> (aa `eq` b2) Omega.&&
 							      (ab `eq` (b3 `plus` (1::Int))) Omega.&&
 							      (f_apply append [aa, ab, ac]) Omega.&&
-							      (b1 `eq` (ac `plus` (1::Int))) )))))) ] )))))))
+							      (b1 `eq` ac )) ))))) ] )))))))
 
     putStr "Bottom-up:\n"
 --    putStr ("part: " ++ (rformula_print_formula_to_string part ["a", "b", "c"]) ++ "\n")
@@ -65,7 +65,7 @@ main = do
     bup_qsort_4 <- bup_one_step bup_qsort_3 qsort_r 4
     bup_qsort_5 <- bup_one_step bup_qsort_4 qsort_r 5
 
-    let bup_append_6 = extract_rformula "{ [a,b] b = 2a && a >= 0 }"
+    let bup_append_6 = extract_rformula "{ [a,b] b = a && b >= 0 }"
     bup_append_7 <- bup_one_step bup_append_6 qsort_r 7
 
     putStr "[DONE]\n"
