@@ -1,5 +1,5 @@
 /*
- * $Id: example.c,v 1.6 2003-06-23 09:57:42 raz Exp $
+ * $Id: example.c,v 1.7 2003-07-03 14:04:42 raz Exp $
  */
 
 //#include <presburger.h>
@@ -137,6 +137,8 @@ int main ()
   relation_print(S);
   //  S.is_upper_bound_satisfiable ();
   //  S.prefix_print ();
+
+  printf(relation_print_with_subs_to_string(S, true));
 
   return EXIT_SUCCESS;
 }
