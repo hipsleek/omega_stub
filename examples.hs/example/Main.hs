@@ -81,5 +81,8 @@ main = do
        relation_finalize s
 
        relation_print s
+       s_ptr_string <- relation_print_with_subs_to_string s 1
+       s_string <- peekCString s_ptr_string
+       print s_string
 
        print "[DONE]"
