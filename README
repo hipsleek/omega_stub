@@ -1,0 +1,14 @@
+Structure:
+include/
+	omega_stub.h		interface to library
+	omega_stug_types.h	interface to library types
+src/
+	library files
+lib/
+	omega_stub.o		library
+examples/
+	some examples of usage of library; for know only the example.c is
+	working properly
+.
+	Makefile		main Makefile; commands implemented so far: all, lib, examples, clean
+	Makefile.rules		paths; this file is included in other places
