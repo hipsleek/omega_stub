@@ -216,9 +216,11 @@ instance Arith_mul Variable Int where
 n `div` us = Stride n us
 
 
---relation_extract_rformula :: (Ptr Omega_stub.Relation) -> IO RFormula
---relation_extract_rformula r =
---    do 
+relation_extract_rformula :: (Ptr Omega_stub.Relation) -> IO RFormula
+relation_extract_rformula ptr_r =
+    do ptr_str_print <- Omega_stub.relation_print_to_string ptr_r
+       str_print <- peekCString ptr_str_print
+       return (extract_rformula str_print)
 
 -- extract_formula_from_set :: (Ptr Omega_stub.Relation) -> (IO RFormula)
 -- extract_formula_from_set ptr_r =
