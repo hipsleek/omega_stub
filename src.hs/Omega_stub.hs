@@ -1,6 +1,6 @@
-{- $Id: Omega.hs,v 1.3 2003-05-25 02:49:56 raz Exp $ -}
+{- $Id: Omega_stub.hs,v 1.1 2003-05-26 05:53:53 raz Exp $ -}
 
-module Omega where
+module Omega_stub where
 
 import Foreign
 import Foreign.C

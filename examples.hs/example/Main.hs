@@ -1,5 +1,5 @@
 module Main(main) where
-import Omega
+import Omega_stub
 import Foreign
 import Foreign.C
 
