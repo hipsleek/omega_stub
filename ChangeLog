@@ -1,3 +1,35 @@
+2003-06-23  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
+
+	* examples.hs/example/Main.hs:
+	f_declare -> f_exists_declare; f_or_add_and is now available
+
+	* examples/example.c: f_declare -> f_exists_declare
+
+	* include/omega_stub.h, src/omega_stub.cpp:
+	adding f_{or|not|forall|exists}_add_{and|or|not|forall|exists}
+
+	* src.hs/Omega_stub.hs:
+	F_And, F_Or, F_Not, F_Forall and F_Exists are (again ;-)) abstract types
+	adding f_{or|not|forall|exists}_add_{and|or|not|forall|exists}
+
+2003-06-17  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
+
+	* examples.hs/example/Main.hs, examples/example.c:
+	small mistake corrected in l declaration
+
+	* src.hs/Makefile, src.hs/Omega.hs:
+	a first simple version of Omega module
+
+	* examples.hs/myexample/Main.hs, examples.hs/myexample/Makefile:
+	An example using the new Omega module
+
+2003-05-26  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
+
+	* src.hs/Makefile, src.hs/Omega.hs, src.hs/Omega_stub.hs, examples.hs/example/Makefile, examples.hs/example/Main.hs:
+	Omega.hs renamed to Omega_stub.hs
+
+	* ChangeLog: regular update
+
 2003-05-26  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
 
 	* Makefile: '$(MAKE) lib' changed to '$(MAKE) all'
@@ -33,7 +65,7 @@
 2003-05-12  Razvan Musaloiu-E.  <raz@soccf-db3-004.ddns.comp.nus.edu.sg>
 
 	* src.hs/Makefile, src.hs/Omega.hs, src.hs/README, src/Makefile, src/omega_stub.cpp, include/omega_stub.h, include/omega_stub_types.h, examples/Makefile, examples/example.c, examples/library_example.c, Makefile, Makefile.rules:
-	adding of $Id: ChangeLog,v 1.6 2003-05-26 05:28:08 raz Exp $ to most of the files
+	adding of $Id: ChangeLog,v 1.7 2003-06-23 10:04:21 raz Exp $ to most of the files
 
 	* src.hs/Omega.hs:
 	Omega.hs's hierarchy change from classes to data's(after a talk with Dana Xu Na)
