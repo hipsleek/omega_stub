@@ -1,5 +1,5 @@
 /*
- * $Id: omega_stub.h,v 1.9 2003-07-28 05:12:36 raz Exp $
+ * $Id: omega_stub.h,v 1.10 2003-07-28 09:38:05 raz Exp $
  */
 
 #ifndef _OMEGA_STUB_H
@@ -86,6 +86,7 @@ extern "C" {
   // printing
   void relation_print(Relation* r);
   void relation_print_to_file(Relation* r, FILE* output_file);
+  const char* relation_print_to_string(Relation* r);
   void relation_print_with_subs(Relation* r, bool printSym);
   void relation_print_with_subs_to_file(Relation* r, FILE* output_file, bool printSym);
   const char* relation_print_with_subs_to_string(Relation* r, bool printSym);
