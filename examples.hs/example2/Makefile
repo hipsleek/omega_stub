@@ -4,7 +4,7 @@ PROG=example2
 
 all: $(PROG)
 
-qsort: Main.hs
+$(PROG): Main.hs
 	ghc -fglasgow-exts -i../../lib.hs -lstdc++ $(LIBS) $(LIB) 	\
 		../../lib/omega_stub.o					\
 		../../lib/Exit.o					\

@@ -204,7 +204,7 @@ instance Arith_q Variable Int where
     v `geq` i = Geq [Const (- i), Coef v 1]
 instance Arith_q Int Variable where
     i `eq` v = Eq [Const (- i), Coef v 1]
-    i `geq` v = Geq [Const (- i), Coef v 1]
+    i `geq` v = Geq [Const i, Coef v (- 1)]
 instance Arith_q Variable Variable where
     v1 `eq` v2 = Eq [Coef v1 1, Coef v2 (- 1)]
     v1 `geq` v2 = Geq [Coef v1 1, Coef v2 (- 1)]
