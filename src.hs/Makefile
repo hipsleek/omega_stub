@@ -1,5 +1,8 @@
 all: lib
 
+#LIB_HS_DIR=../lib.prof.hs
+#GHC_FLAGS=-prof -fglasgow-exts -fallow-overlapping-instances 
+
 LIB_HS_DIR=../lib.hs
 GHC_FLAGS=-fglasgow-exts -fallow-overlapping-instances 
 

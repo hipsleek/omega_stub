@@ -89,6 +89,15 @@ difference (ins1, outs1, rf1) (ins2, outs2, rf2) =
        eval_relation ptr_r2 f2
        ptr_diff_r <- Omega_stub.difference ptr_r1 ptr_r2
        relation_extract_rformula ptr_diff_r
+
+pairwiseCheck:: Relation -> IO RFormula
+pairwiseCheck (ins,outs,rf) = 
+    do (ptr_r, f) <- build_relation (ins, outs, rf)
+       eval_relation ptr_r f
+       ptr_checked_r <- Omega_stub.check_for_convex_pairs ptr_r
+       ptr_pw_r <- Omega_stub.check_for_convex_representation ptr_checked_r
+       relation_extract_rformula ptr_pw_r
+  
 ------------------------
 
 ------------------------

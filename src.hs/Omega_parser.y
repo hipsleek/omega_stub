@@ -26,8 +26,8 @@ import Debug.Trace
 	'<'		{ TokenLT }
 	'+'		{ TokenPlus }
 	'-'		{ TokenMinus }
-	'*'		{ TokenTimes }
-	'/'		{ TokenDiv }
+--	'*'		{ TokenTimes }
+--	'/'		{ TokenDiv }
 	'('		{ TokenORB }
 	')'		{ TokenCRB }
 	'{'		{ TokenOCB }
@@ -38,6 +38,7 @@ import Debug.Trace
 	or		{ TokenOr }
 	','		{ TokenComma }
 	':'		{ TokenSColon }
+	unknown { TokenUnknown }
 
 %left and or
 %left '=' geq leq
@@ -74,6 +75,7 @@ Formulas :
   | {- empty -}      { And [] }
   | true { Or [Eq[Const 0]] }
   | false { And [Eq[Const 0,Const 1]] }
+  | unknown { Unknown }
 
 Formula :: { Formula }
 Formula : qs              { let (f,rest)=$1 in f }
@@ -166,6 +168,7 @@ replace_var_in_formula v1_name v2 (Forall f) = Forall (\v -> (replace_var_in_for
 replace_var_in_formula v1_name v2 (Geq us) = Geq (map (replace_var_in_update v1_name v2) us)
 replace_var_in_formula v1_name v2 (Eq us) = Eq (map (replace_var_in_update v1_name v2) us)
 replace_var_in_formula v1_name v2 (Stride i us) = Stride i (map (replace_var_in_update v1_name v2) us)
+replace_var_in_formula v1_name v2 (Unknown) = Unknown
 
 replace_var_in_update :: Variable_name -> Variable -> Update -> Update
 replace_var_in_update v1_name v2 (Coef (v3_name, v3_ptr) i) | v3_name == v1_name = Coef v2 i

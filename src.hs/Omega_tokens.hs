@@ -28,4 +28,5 @@ data Token
 	| TokenSColon
 	| TokenTrue
 	| TokenFalse
+	| TokenUnknown
 	deriving Show

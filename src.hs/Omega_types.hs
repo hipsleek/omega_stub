@@ -20,6 +20,7 @@ data Formula = And [Formula]
 	     | Geq [Update]
 	     | Eq [Update]
 	     | Stride Int [Update]
+	     | Unknown
 --	     deriving Show
 
 data Update = Coef Variable Int
@@ -63,6 +64,7 @@ instance Show Formula where
 		            show_vec [u] = show u
 		            show_vec (u:us) = show u ++ " + " ++ show_vec us
 			in show i ++ "|" ++ show_vec u
+    show (Unknown) = " UNKNOWN "
 
 instance Show RFormula where
     show (Formula f) = "(F) . " ++ show f
@@ -114,6 +116,7 @@ instance Omega_Show Formula where
     omega_show (Geq u) vari = (show (Geq u), vari)
     omega_show (Eq u) vari = (show (Eq u), vari)
     omega_show (Stride i u) vari = (show (Stride i u), vari)
+    omega_show (Unknown) vari = (show (Unknown), vari)
     
 
 --instance Show (Variable -> RFormula) where

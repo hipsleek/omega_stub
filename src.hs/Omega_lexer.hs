@@ -50,6 +50,7 @@ omega_lexVar cs =
       	("and",rest)    -> TokenAnd     : omega_lexer rest
         ("TRUE",rest)   -> TokenTrue    : omega_lexer rest
         ("FALSE",rest)  -> TokenFalse   : omega_lexer rest
+        ("UNKNOWN",rest)-> TokenUnknown : omega_lexer rest
       	(var,rest)      -> TokenVar var : omega_lexer rest
 
 -- {[x] -> [y] y = 1+x }
