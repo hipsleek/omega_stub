@@ -1,5 +1,5 @@
 /*
- * $Id: omega_stub.cpp,v 1.6 2003-07-07 04:24:48 raz Exp $
+ * $Id: omega_stub.cpp,v 1.7 2003-07-10 06:49:16 raz Exp $
  */
 
 #include <omega.h>
@@ -18,6 +18,11 @@ Relation* relation_new1(int n_input)
 Relation* relation_new2(int n_input, int n_output)
 {
   return new Relation(n_input, n_output);
+}
+
+Relation* relation_copy(Relation* r)
+{
+  return new Relation(*r);
 }
 
 
@@ -77,6 +82,29 @@ void relation_name_output_var(Relation* r, int nth, char* name)
 {
   r->name_output_var(nth, String(name));
 }
+
+
+bool relation_is_set(Relation* r)
+{
+  return r->is_set();
+}
+
+int relation_n_inp(Relation* r)
+{
+  return r->is_set();
+}
+
+int relation_n_out(Relation* r)
+{
+  return r->is_set();
+}
+
+int relation_n_set(Relation* r)
+{
+  return r->is_set();
+}
+
+
 
 
 F_And* relation_add_and(Relation* r)
