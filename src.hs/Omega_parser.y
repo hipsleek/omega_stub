@@ -52,19 +52,18 @@ LUnion: LUnion1 { let fs = reverse $1 in if (length fs == 1) then head fs else U
 LUnion1: OFormula   {[$1]}
   | LUnion1 union OFormula  {$3:$1}
 
-OFormula : '{' '[' Vars ']' arrow '[' Vars ']' Formulas '}' { (replace_vars_in_rformula_With_Pre ($3 ++ $7) (Formula $9)) }
-         | '{' '[' Vars ']' arrow '[' Vars ']' ':' Formulas '}' { (replace_vars_in_rformula_With_Pre ($3 ++ $7) (Formula $10)) }
-         | '{' '[' Vars ']' Formulas '}' { (replace_vars_in_rformula_With_Pre $3 (Formula $5)) }
-         | '{' '[' Vars ']' ':' Formulas '}' { (replace_vars_in_rformula_With_Pre $3 (Formula $6)) }
+--Headings are Exprs, because of the sugaring in Omega
+OFormula : '{' '[' Exprs ']' arrow '[' Exprs ']' Formulas '}' { (replace_vars_in_rformula_With_Pre ((reverse $3) ++ (reverse $7)) (Formula $9)) }
+         | '{' '[' Exprs ']' arrow '[' Exprs ']' ':' Formulas '}' { (replace_vars_in_rformula_With_Pre ((reverse $3) ++ (reverse $7)) (Formula $10)) }
+         | '{' '[' Exprs ']' Formulas '}' { (replace_vars_in_rformula_With_Pre (reverse $3) (Formula $5)) }
+         | '{' '[' Exprs ']' ':' Formulas '}' { (replace_vars_in_rformula_With_Pre (reverse $3) (Formula $6)) }
          | '{' Formulas '}'   { Formula $2}
 
-Vars :: { [HeadVariable] }
-Vars : Vars ',' var { $1 ++ [HeadString $3]}
-     | Vars ',' int { $1 ++ [HeadInt $3]}
-     | Vars ',' '-' int %prec NEG { $1 ++ [HeadInt (- $4)]}
-     | var          { [HeadString $1] }
-     | int          { [HeadInt $1] }
-     | '-' int %prec NEG { [HeadInt (- $2)] }
+--Vars is used only in forall, exists where Headings are guaranteed to be strings 
+--no integers, duplicates or more complicated variables
+Vars :: { [Variable_name] }
+Vars : Vars ',' var { $1 ++ [$3]}
+     | var          { [$1] }
 
 Formulas :: { Formula }
 Formulas : 
@@ -146,9 +145,11 @@ Expr : Expr '+' Expr { $1 ++ $3 }
      | Expr '-' Expr { $1 ++ (minus_update $3) }
      | '(' Expr ')'  { $2 }
      | int var       { [ Coef ($2, nullPtr) $1 ] }
+     | '-' int var       { [ Coef ($3, nullPtr) (-$2) ] }
      | int           { [ Const $1 ] }
      | '-' int %prec NEG { [ Const (- $2)] }
      | var           { [ Coef ($1, nullPtr) 1 ]}
+     | '-' var       { [ Coef ($2, nullPtr) (-1) ]}
 
 {
 happyError tokens = error ("Parse error" ++ (show tokens))
@@ -175,55 +176,53 @@ replace_var_in_rformula :: Variable_name -> Variable -> RFormula -> RFormula
 replace_var_in_rformula v1_name v2 (RFormula rf) = RFormula (\v -> replace_var_in_rformula v1_name v2 (rf v) )
 replace_var_in_rformula v1_name v2 (Formula f) = Formula (replace_var_in_formula v1_name v2 f)
 -------Changes---------------------
-replace_vars_in_rformula_With_Pre:: [HeadVariable] -> RFormula -> RFormula
+replace_vars_in_rformula_With_Pre:: [[Update]] -> RFormula -> RFormula
 replace_vars_in_rformula_With_Pre v_names (Formula f) = 
   let (pre_v_names,eqs) = runFS MkState{cnt=0} (preproc_rformula v_names) in
   replace_vars_in_rformula pre_v_names (Formula $ And (f:eqs))
 
--- examine [HeadVariable] for duplicates
--- introduce fresh names and equalities between fresh and one of the duplicates
--- introduce fresh names for integers and eqaulities between fresh and integers
-preproc_rformula:: [HeadVariable] -> FS ([Variable_name],[Formula])
+-- examine [[Update]] for peculiarities
+-- introduce fresh names for duplicates and equalities between fresh and one of the duplicates
+-- introduce fresh names for integers and eqaulities between fresh and that integer
+-- introduce fresh names for expressions and eqaulities between fresh and that expression
+preproc_rformula:: [[Update]] -> FS ([Variable_name],[Formula])
 preproc_rformula [] = return ([],[])
-preproc_rformula (HeadInt v_int:hv_names) =
-  preproc_rformula hv_names >>= \(v_names,eqs) ->
-  fresh >>= \fsh ->
-  let newEq = Eq [Coef (fsh,nullPtr) 1,Const (-v_int)] in
-  return (fsh:v_names,newEq:eqs)
 
-preproc_rformula (HeadString v_name:hv_names) = 
+--for variables (Coef) that are not duplicated no fresh name is introduced
+--for integers, duplicated variables or more complicated expressions, fresh names are introduced
+preproc_rformula ([Coef (v_name,nullPtr) 1]:hv_names) = 
   preproc_rformula hv_names >>= \(v_names,eqs) ->
   if isDuplicated v_name hv_names
     then 
       fresh >>= \fsh ->
-      let newEq = Eq [Coef (fsh,nullPtr) 1,Coef (v_name,nullPtr) (-1)] in
+      let newEq = Eq [Coef (fsh,nullPtr) (-1),Coef (v_name,nullPtr) 1] in
       return (fsh:v_names,newEq:eqs)
     else return (v_name:v_names,eqs)
+    
+preproc_rformula(ups:hv_names) = 
+  preproc_rformula hv_names >>= \(v_names,eqs) ->
+  fresh >>= \fsh ->
+  let newEq = Eq $ Coef (fsh,nullPtr) (-1):ups in
+  return (fsh:v_names,newEq:eqs)
 
--- when looking for duplicates, only HeadString's are important
-isDuplicated:: Variable_name -> [HeadVariable] -> Bool
+isDuplicated:: Variable_name -> [[Update]] -> Bool
 isDuplicated v [] = False
-isDuplicated v (HeadString s:v_names) = or [v == s,isDuplicated v v_names]
-isDuplicated v (HeadInt i:v_names) = isDuplicated v v_names
--------Changes---------------------
+isDuplicated v ([Coef (v_name,nullPtr) 1]:v_names) = or [v==v_name,isDuplicated v v_names]
+isDuplicated v (_:v_names) = isDuplicated v v_names
 
+-------Changes---------------------
 replace_vars_in_rformula :: [Variable_name] -> RFormula -> RFormula
 replace_vars_in_rformula [] rf = rf
 replace_vars_in_rformula (v_name:v_names) rf = 
   RFormula (\v -> (replace_var_in_rformula v_name v (replace_vars_in_rformula v_names rf))) 
 
---HeadVariable can't be Int in the case of exists and forall
-exists_vars_in_formula :: [HeadVariable] -> Formula -> Formula
+exists_vars_in_formula :: [Variable_name] -> Formula -> Formula
 exists_vars_in_formula [] f = f
-exists_vars_in_formula ((HeadString v_name):v_names) f = Exists (\v -> (replace_var_in_formula v_name v (exists_vars_in_formula v_names f)))
+exists_vars_in_formula (v_name:v_names) f = Exists (\v -> (replace_var_in_formula v_name v (exists_vars_in_formula v_names f)))
 
-forall_vars_in_formula :: [HeadVariable] -> Formula -> Formula
+forall_vars_in_formula :: [Variable_name] -> Formula -> Formula
 forall_vars_in_formula [] f = f
-forall_vars_in_formula ((HeadString v_name):v_names) f = Forall (\v -> (replace_var_in_formula v_name v (forall_vars_in_formula v_names f)))
-
-singleton:: [a] -> Bool
-singleton [x] = True
-singleton _ = False 
+forall_vars_in_formula (v_name:v_names) f = Forall (\v -> (replace_var_in_formula v_name v (forall_vars_in_formula v_names f)))
 
 -------FS Fresh---------------------------
 data St = MkState {cnt :: Integer}
@@ -240,4 +239,7 @@ fresh = FS (\st -> (st{cnt = (cnt st) + 1},"fsh_" ++ show (cnt st)))
 runFS:: St -> FS a -> a
 runFS state (FS a) = snd $ a state
 -------FS Fresh---------------------------
+singleton:: [a] -> Bool
+singleton [x] = True
+singleton _ = False 
 }

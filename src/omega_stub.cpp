@@ -1,5 +1,5 @@
 /*
- * $Id: omega_stub.cpp,v 1.10 2003-07-28 09:50:22 raz Exp $
+ * $Id: omega_stub.cpp,v 1.11 2003-11-24 03:52:46 popeeaco Exp $
  */
 
 #include <omega.h>
@@ -306,7 +306,8 @@ void relation_print_to_file(Relation* r, FILE* output_file)
 
 const char* relation_print_to_string(Relation* r)
 {
-  return strdup(r->print_to_string());
+//  return strdup(r->print_to_string());
+  return strdup(r->print_with_subs_to_string());
 }
 
 void relation_print_with_subs_to_file(Relation* r, FILE* output_file, bool printSym)

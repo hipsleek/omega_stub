@@ -1,9 +1,9 @@
-# $Id: Makefile.rules,v 1.4 2003-08-19 12:31:41 raz Exp $
+# $Id: Makefile.rules,v 1.5 2003-11-24 03:52:35 popeeaco Exp $
 
 CC=g++
 CFLAGS=-DOMIT_QUANTIFY_CALLS -g -Wall -DSIG_HANDLER_HAS_ONE_ARG=1 -DSHUT_UP_ABOUT_STATEMENT_WITH_NO_EFFECT_IN_DYNAMIC_ARRAY_CREATION -Wno-deprecated
 
-BASEDIR=/home/raz/local
+BASEDIR=/usr/local
 
 INCS=-I$(BASEDIR)/include/omega -I.
 LIBS=-L$(BASEDIR)/lib

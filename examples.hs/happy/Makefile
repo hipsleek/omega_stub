@@ -4,7 +4,7 @@ PROG=parser
 
 all: $(PROG)
 
-$(PROG): Main.hs
+$(PROG): Main.hs ../../lib.hs/Omega_parser.o
 	ghc -fglasgow-exts -i../../lib.hs -lstdc++ $(LIBS) $(LIB) 	\
 		../../lib/omega_stub.o					\
 		../../lib/Exit.o					\

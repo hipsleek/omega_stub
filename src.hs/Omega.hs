@@ -17,7 +17,7 @@ import qualified Omega_stub
 import Omega_parser
 import Prelude hiding ((>),(&&),(||))
 import List
-
+import Debug.Trace
 
 build_relation :: Relation -> IO ((Ptr Omega_stub.Relation), RFormula)
 build_relation (vars_in_name, vars_out_name, rf) =
@@ -224,6 +224,8 @@ relation_extract_rformula ptr_r =
        ptr_str_print <- Omega_stub.relation_print_to_string ptr_r
        str_print <- peekCString ptr_str_print
        return (extract_rformula str_print)
+
+tr s f = trace (s++show f) f
 
 -- extract_formula_from_set :: (Ptr Omega_stub.Relation) -> (IO RFormula)
 -- extract_formula_from_set ptr_r =
