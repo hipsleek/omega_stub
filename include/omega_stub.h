@@ -5,9 +5,11 @@
 
 extern "C" {
   
-  Relation* relation_cons0();
-  Relation* relation_cons1(int n_input);
-  Relation* relation_cons2(int n_input, int n_output);
+  Relation* relation_new0();
+  Relation* relation_new1(int n_input);
+  Relation* relation_new2(int n_input, int n_output);
+
+  void relation_delete(Relation* r);
 
   void relation_finalize(Relation* r);
 
