@@ -79,8 +79,16 @@ instance Omega_Show RFormula where
 				  in ("(F) . " ++ str', vari')
     omega_show (RFormula r) vari = let (str', vari') = omega_show (r (("_" ++ (show vari)), nullPtr)) (vari + 1)
 				   in ("[_" ++ (show vari) ++ "] . " ++ str', vari')
-    omega_show (Union rfs) vari = let (str',vari') = omega_show (head rfs) vari in --do better 
-          ("UNION " ++ str',vari')
+    omega_show (Union rfs) vari = omega_show_union rfs vari
+
+omega_show_union:: [RFormula] -> Int -> (String,Int)
+omega_show_union [] vari = ("",vari)
+omega_show_union [f] vari = omega_show f vari
+omega_show_union (f:fs) vari = 
+  let (str1,var1) = omega_show f vari in
+  let (str2,var2) = omega_show_union fs var1 in
+    (str1 ++ " union " ++ str2,var2)
+
 
 instance Omega_Show Formula where
     omega_show (And c) vari = let show_vec :: [Formula] -> Int -> (String, Int)

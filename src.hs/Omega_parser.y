@@ -175,6 +175,20 @@ replace_var_in_update v1_name v2 (Const i) = Const i
 replace_var_in_rformula :: Variable_name -> Variable -> RFormula -> RFormula
 replace_var_in_rformula v1_name v2 (RFormula rf) = RFormula (\v -> replace_var_in_rformula v1_name v2 (rf v) )
 replace_var_in_rformula v1_name v2 (Formula f) = Formula (replace_var_in_formula v1_name v2 f)
+replace_vars_in_rformula :: [Variable_name] -> RFormula -> RFormula
+
+replace_vars_in_rformula [] rf = rf
+replace_vars_in_rformula (v_name:v_names) rf = 
+  RFormula (\v -> (replace_var_in_rformula v_name v (replace_vars_in_rformula v_names rf))) 
+
+exists_vars_in_formula :: [Variable_name] -> Formula -> Formula
+exists_vars_in_formula [] f = f
+exists_vars_in_formula (v_name:v_names) f = Exists (\v -> (replace_var_in_formula v_name v (exists_vars_in_formula v_names f)))
+
+forall_vars_in_formula :: [Variable_name] -> Formula -> Formula
+forall_vars_in_formula [] f = f
+forall_vars_in_formula (v_name:v_names) f = Forall (\v -> (replace_var_in_formula v_name v (forall_vars_in_formula v_names f)))
+
 -------Changes---------------------
 replace_vars_in_rformula_With_Pre:: [[Update]] -> RFormula -> RFormula
 replace_vars_in_rformula_With_Pre v_names (Formula f) = 
@@ -210,20 +224,6 @@ isDuplicated v [] = False
 isDuplicated v ([Coef (v_name,nullPtr) 1]:v_names) = or [v==v_name,isDuplicated v v_names]
 isDuplicated v (_:v_names) = isDuplicated v v_names
 
--------Changes---------------------
-replace_vars_in_rformula :: [Variable_name] -> RFormula -> RFormula
-replace_vars_in_rformula [] rf = rf
-replace_vars_in_rformula (v_name:v_names) rf = 
-  RFormula (\v -> (replace_var_in_rformula v_name v (replace_vars_in_rformula v_names rf))) 
-
-exists_vars_in_formula :: [Variable_name] -> Formula -> Formula
-exists_vars_in_formula [] f = f
-exists_vars_in_formula (v_name:v_names) f = Exists (\v -> (replace_var_in_formula v_name v (exists_vars_in_formula v_names f)))
-
-forall_vars_in_formula :: [Variable_name] -> Formula -> Formula
-forall_vars_in_formula [] f = f
-forall_vars_in_formula (v_name:v_names) f = Forall (\v -> (replace_var_in_formula v_name v (forall_vars_in_formula v_names f)))
-
 -------FS Fresh---------------------------
 data St = MkState {cnt :: Integer}
 newtype FS a = FS (St -> (St,a))
@@ -242,4 +242,5 @@ runFS state (FS a) = snd $ a state
 singleton:: [a] -> Bool
 singleton [x] = True
 singleton _ = False 
+
 }
