@@ -75,7 +75,9 @@ forall_vars_in_formula (v_name:v_names) f = Forall (\v -> (replace_var_in_formul
 
 %%
 OFormula : '{' '[' Vars ']' arrow '[' Vars ']' Formulas '}' { (replace_vars_in_rformula ($3 ++ $7) (Formula $9)) }
+         | '{' '[' Vars ']' arrow '[' Vars ']' ':' Formulas '}' { (replace_vars_in_rformula ($3 ++ $7) (Formula $10)) }
          | '{' '[' Vars ']' Formulas '}' { (replace_vars_in_rformula $3 (Formula $5)) }
+         | '{' '[' Vars ']' ':' Formulas '}' { (replace_vars_in_rformula $3 (Formula $6)) }
 
 Vars :: { [Variable_name] }
 Vars : Vars ',' var { $1 ++ [$3]}
@@ -92,7 +94,7 @@ OrFormulas : OrFormulas or Formulas { $3:$1 }
            | Formulas or Formulas { [$1,$3] }
 AndFormulas :: { [Formula] }
 AndFormulas : AndFormulas and Formulas { $3:$1 }
-            | Formulas and Formulas     { [$1,$3] }
+            | Formulas and Formulas    { [$1,$3] }
 Formula :: { Formula }
 Formula : qs              { $1 }
         | q               { let (f,_) = $1 in f }
@@ -108,11 +110,19 @@ qs : q '=' Expr { let (f,es) = $1 in (And [f,Eq (es ++ (minus_update $3))]) }
    | q '<' Expr { let (f,es) = $1 in (And [f,Geq ((Const (- 1)):($3 ++ (minus_update es)))]) }
 
 q :: { (Formula,[Update]) }
-q : Expr '=' Expr { ((Eq ($1 ++ (minus_update $3))),$3) }
-  | Expr geq Expr { ((Geq ($1 ++ (minus_update $3))),$3) }
-  | Expr leq Expr { ((Geq ($3 ++ (minus_update $1))),$3) }
-  | Expr '>' Expr { ((Geq ((Const (- 1)):($1 ++ (minus_update $3)))),$3) }
-  | Expr '<' Expr { ((Geq ((Const (- 1)):($3 ++ (minus_update $1)))),$3) }
+q : Expr '=' Expr  { ((Eq ($1 ++ (minus_update $3))),$3) }
+  | Expr geq Expr  { ((Geq ($1 ++ (minus_update $3))),$3) }
+  | Expr leq Expr  { ((Geq ($3 ++ (minus_update $1))),$3) }
+  | Expr '>' Expr  { ((Geq ((Const (- 1)):($1 ++ (minus_update $3)))),$3) }
+  | Expr '<' Expr  { ((Geq ((Const (- 1)):($3 ++ (minus_update $1)))),$3) }
+  | Exprs geq Expr { ((And (map (\e -> (Geq (e ++ (minus_update $3)))) $1)),$3) }
+  | Exprs leq Expr { ((And (map (\e -> (Geq ($3 ++ (minus_update e)))) $1)),$3) }
+  | Exprs '>' Expr { ((And (map (\e -> (Geq ((Const (- 1)):(e ++ (minus_update $3))) )) $1)),$3) }
+  | Exprs '<' Expr { ((And (map (\e -> (Geq ((Const (- 1)):($3 ++ (minus_update e))) )) $1)),$3) }
+
+Exprs :: { [[Update]] }
+Exprs : Exprs ',' Expr { $3:$1 }
+      | Expr ',' Expr  { [$1,$3] }
 
 Expr :: { [Update] }
 Expr : Expr '+' Expr { $1 ++ $3 }
