@@ -1,6 +1,6 @@
 # RazvanME: hand made stuff :-)
 #
-# $Id: Makefile,v 1.7 2003-07-28 05:07:18 raz Exp $
+# $Id: Makefile,v 1.8 2003-08-19 12:23:38 raz Exp $
 
 all: lib lib.hs examples.hs
 
@@ -17,6 +17,7 @@ examples.hs: lib lib.hs
 	cd examples.hs/example && $(MAKE)
 	cd examples.hs/myexample && $(MAKE)
 	cd examples.hs/append && $(MAKE)
+	cd examples.hs/qsort && $(MAKE)
 	cd examples.hs/example1 && $(MAKE)
 	cd examples.hs/example2 && $(MAKE)
 	cd examples.hs/happy && $(MAKE)
@@ -29,6 +30,7 @@ clean:
 	cd examples.hs/example && $(MAKE) clean
 	cd examples.hs/myexample && $(MAKE) clean
 	cd examples.hs/append && $(MAKE) clean
+	cd examples.hs/qsort && $(MAKE) clean
 	cd examples.hs/example1 && $(MAKE) clean
 	cd examples.hs/example2 && $(MAKE) clean
 	cd examples.hs/happy && $(MAKE) clean
