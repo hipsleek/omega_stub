@@ -41,6 +41,7 @@ build_relation (vars_in_name, vars_out_name, rf) =
 		  Omega_stub.relation_name_output_var r offset_var_no var_str
 		  var_ptr <- Omega_stub.relation_output_var r offset_var_no
 		  name_output (rf (var_name, var_ptr)) vars_name (offset_var_no + 1) r
+	   name_output rf vars _ _ = error ("ERROR: name_output: rf = " ++ (show rf))
        r <- if vars_out_no <= 0
            then Omega_stub.relation_new1 vars_in_no 
 	   else Omega_stub.relation_new2 vars_in_no vars_out_no
@@ -58,11 +59,12 @@ eval_relation r (Formula (Or fs)) =
     do r' <- add_or r
        sequence_ [eval_function r' f | f <- fs]
 eval_relation r (Formula f) =
-    do putStr "ERROR: You are trying to eval_relation-ing a Formula not implemented!"
-       putStr (show f)
+    let (str, _) = omega_show f 1
+    in do error ("ERROR: You are trying to eval_relation-ing a Formula not implemented!\n" ++ str)
 eval_relation r rf =
-    do putStr "ERROR: You are trying to eval_relation-ing a Rformula not implemented!"
-       putStr (show rf)
+    let (str, _) = omega_show rf 1
+    in do error ("ERROR: You are trying to eval_relation-ing a RFormula not implemented!\n" ++ str)
+
 
 eval_function :: Evaluable r => (Ptr r) -> Formula -> IO ()
 eval_function r (And fs) =
