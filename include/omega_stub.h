@@ -1,5 +1,5 @@
 /*
- * $Id: omega_stub.h,v 1.3 2003-05-12 11:38:37 raz Exp $
+ * $Id: omega_stub.h,v 1.4 2003-06-23 09:57:07 raz Exp $
  */
 
 #ifndef _OMEGA_STUB_H
@@ -44,7 +44,32 @@ extern "C" {
   EQ_Handle* f_and_add_EQ(F_And* f);
   Stride_Handle* f_and_add_stride(F_And* f, int step);
 
-  Variable_ID f_declare(F_Declaration* f, char* name);
+  F_And* f_or_add_and(F_Or* f);
+  F_Or* f_or_add_or(F_Or* r);
+  F_Not* f_or_add_not(F_Or* r);
+  F_Forall* f_or_add_forall(F_Or* r);
+  F_Exists* f_or_add_exists(F_Or* r);
+
+  F_And* f_not_add_and(F_Not* f);
+  F_Or* f_not_add_or(F_Not* r);
+  F_Not* f_not_add_not(F_Not* r);
+  F_Forall* f_not_add_forall(F_Not* r);
+  F_Exists* f_not_add_exists(F_Not* r);
+
+  F_And* f_forall_add_and(F_Forall* f);
+  F_Or* f_forall_add_or(F_Forall* r);
+  F_Not* f_forall_add_not(F_Forall* r);
+  F_Forall* f_forall_add_forall(F_Forall* r);
+  F_Exists* f_forall_add_exists(F_Forall* r);
+
+  F_And* f_exists_add_and(F_Exists* f);
+  F_Or* f_exists_add_or(F_Exists* r);
+  F_Not* f_exists_add_not(F_Exists* r);
+  F_Forall* f_exists_add_forall(F_Exists* r);
+  F_Exists* f_exists_add_exists(F_Exists* r);
+
+  Variable_ID f_forall_declare(F_Forall* f, char* name);
+  Variable_ID f_exists_declare(F_Exists* f, char* name);
 
   void constraint_handler_update_const(Constraint_Handle* ch, coef_t delta);
   void constraint_handler_update_coef(Constraint_Handle* ch, Variable_ID v, coef_t delta);

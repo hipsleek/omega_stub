@@ -1,5 +1,5 @@
 /*
- * $Id: omega_stub.cpp,v 1.3 2003-05-12 11:38:38 raz Exp $
+ * $Id: omega_stub.cpp,v 1.4 2003-06-23 09:57:02 raz Exp $
  */
 
 #include <omega.h>
@@ -150,7 +150,100 @@ Stride_Handle* f_and_add_stride(F_And* f, int step)
   //  return &(f->add_stride(step));
 }
 
-Variable_ID f_declare(F_Declaration* f, char* name)
+
+F_And* f_or_add_and(F_Or* f)
+{
+  return f->add_and();
+}
+F_Or* f_or_add_or(F_Or* f)
+{
+  return f->add_or();
+}
+F_Not* f_or_add_not(F_Or* f)
+{
+  return f->add_not();
+}
+F_Forall* f_or_add_forall(F_Or* f)
+{
+  return f->add_forall();
+}
+F_Exists* f_or_add_exists(F_Or* f)
+{
+  return f->add_exists();
+}
+
+
+F_And* f_not_add_and(F_Not* f)
+{
+  return f->add_and();
+}
+F_Or* f_not_add_or(F_Not* f)
+{
+  return f->add_or();
+}
+F_Not* f_not_add_not(F_Not* f)
+{
+  return f->add_not();
+}
+F_Forall* f_not_add_forall(F_Not* f)
+{
+  return f->add_forall();
+}
+F_Exists* f_not_add_exists(F_Not* f)
+{
+  return f->add_exists();
+}
+
+
+F_And* f_forall_add_and(F_Forall* f)
+{
+  return f->add_and();
+}
+F_Or* f_forall_add_or(F_Forall* f)
+{
+  return f->add_or();
+}
+F_Not* f_forall_add_not(F_Forall* f)
+{
+  return f->add_not();
+}
+F_Forall* f_forall_add_forall(F_Forall* f)
+{
+  return f->add_forall();
+}
+F_Exists* f_forall_add_exists(F_Forall* f)
+{
+  return f->add_exists();
+}
+
+
+F_And* f_exists_add_and(F_Exists* f)
+{
+  return f->add_and();
+}
+F_Or* f_exists_add_or(F_Exists* f)
+{
+  return f->add_or();
+}
+F_Not* f_exists_add_not(F_Exists* f)
+{
+  return f->add_not();
+}
+F_Forall* f_exists_add_forall(F_Exists* f)
+{
+  return f->add_forall();
+}
+F_Exists* f_exists_add_exists(F_Exists* f)
+{
+  return f->add_exists();
+}
+
+
+Variable_ID f_forall_declare(F_Forall* f, char* name)
+{
+  return f->declare(name);
+}
+Variable_ID f_exists_declare(F_Exists* f, char* name)
 {
   return f->declare(name);
 }
