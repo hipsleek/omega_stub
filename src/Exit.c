@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <basic/Exit.h>
 
-List<exit_func> Exit_hooks;
+//List<exit_func> Exit_hooks;
 
 void Exit(int e) 
     {
