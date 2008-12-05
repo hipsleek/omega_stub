@@ -1,11 +1,12 @@
 #include <stdlib.h>
 #include <basic/Exit.h>
 
-List<exit_func> omega::Exit_hooks;
+/*List<exit_func> Exit_hooks;
 
-void omega::Exit(int e) 
+void Exit(int e) 
     {
-    foreach(func, exit_func, omega::Exit_hooks, (*func)(e));
+    foreach(func, exit_func, Exit_hooks, (*func)(e));
 
     exit(e);
     }
+*/
