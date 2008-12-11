@@ -1,5 +1,5 @@
 /*
- * $Id: omega_stub.h,v 1.10 2003-07-28 09:38:05 raz Exp $
+ * $Id: omega_stub.h,v 1.11 2008-12-11 07:09:02 cristian Exp $
  */
 
 #ifndef _OMEGA_STUB_H
@@ -179,7 +179,7 @@ extern "C" {
   Constr_Vars_Iter* geq_constr_iter_new(GEQ_Iterator* geq);
 
   Variable_ID constr_iter_get_variable(Constr_Vars_Iter* cvi);
-  int constr_iter_get_coef(Constr_Vars_Iter* cvi);
+  coef_t constr_iter_get_coef(Constr_Vars_Iter* cvi);
   void constr_iter_next(Constr_Vars_Iter* cvi);
   bool constr_iter_more(Constr_Vars_Iter* cvi);
 
@@ -188,8 +188,8 @@ extern "C" {
   bool var_iter_more(Variable_Iterator* vi);
   Variable_ID var_iter_get_variable(Variable_Iterator* vi);
 
-  int eq_get_const(EQ_Iterator* eq);
-  int geq_get_const(GEQ_Iterator* qi);
+  coef_t eq_get_const(EQ_Iterator* eq);
+  coef_t geq_get_const(GEQ_Iterator* qi);
 
   void relation_setup_names(Relation* r);
 

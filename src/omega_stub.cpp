@@ -1,5 +1,5 @@
 /*
- * $Id: omega_stub.cpp,v 1.11 2003-11-24 03:52:46 popeeaco Exp $
+ * $Id: omega_stub.cpp,v 1.12 2008-12-11 07:09:02 cristian Exp $
  */
 
 #include <omega.h>
@@ -804,7 +804,7 @@ Variable_ID constr_iter_get_variable(Constr_Vars_Iter* cvi)
   return (*(*cvi)).var;
 }
 
-int constr_iter_get_coef(Constr_Vars_Iter* cvi)
+coef_t constr_iter_get_coef(Constr_Vars_Iter* cvi)
 {
   OMEGA_STUB_DEBUG_MSG("DEBUG: constr_iter_get_coef\n");
   return (*(*cvi)).coef;
@@ -848,13 +848,13 @@ Variable_ID var_iter_get_variable(Variable_Iterator* vi)
   return (*(*vi));
 }
 
-int eq_get_const(EQ_Iterator* eq)
+coef_t eq_get_const(EQ_Iterator* eq)
 {
   OMEGA_STUB_DEBUG_MSG("DEBUG: eq_get_const\n");
   return (*(*eq)).get_const();
 }
 
-int geq_get_const(GEQ_Iterator* qi)
+coef_t geq_get_const(GEQ_Iterator* qi)
 {
   OMEGA_STUB_DEBUG_MSG("DEBUG: geq_get_const\n");
   return (*(*qi)).get_const();
