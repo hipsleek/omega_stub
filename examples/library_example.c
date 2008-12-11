@@ -1,5 +1,5 @@
 /*
- * $Id: library_example.c,v 1.2 2003-05-12 11:38:36 raz Exp $
+ * $Id: library_example.c,v 1.3 2008-12-11 03:50:57 cristian Exp $
  */
 
 /*
@@ -137,7 +137,7 @@ int main()
     assert(!R.is_tautology());
     R.print_with_subs(stdout);
 
-    int lb, ub;
+    coef_t lb, ub;
     bool coupled;
     R.query_difference(i2, i, lb, ub, coupled);
     assert(lb == 1);        // i < i2: i2 - i1 > 0
@@ -150,7 +150,7 @@ int main()
             {
             printf("  In next equality constraint,\n");
             for(Constr_Vars_Iter cvi(*ei); cvi; cvi++)
-                printf("    Variable \%s has coefficient \%d\n",
+                printf("    Variable \%s has coefficient \%lld\n",
                        (*cvi).var->char_name(), 
                        (*cvi).coef);
             }
@@ -158,7 +158,7 @@ int main()
             {
             printf("  In next inequality constraint,\n");
             for(Constr_Vars_Iter cvi(*gi); cvi; cvi++)
-                printf("    Variable \%s has coefficient \%d\n",
+                printf("    Variable \%s has coefficient \%lld\n",
                        (*cvi).var->char_name(), 
                        (*cvi).coef);
             }
