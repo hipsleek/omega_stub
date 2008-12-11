@@ -1,5 +1,5 @@
 /*
- * $Id: omega_stub_types.h,v 1.4 2004-07-21 11:36:19 popeeaco Exp $
+ * $Id: omega_stub_types.h,v 1.5 2008-12-11 03:38:33 cristian Exp $
  */
 
 #ifndef _OMEGA_STUB_TYPES_H
@@ -27,7 +27,7 @@ extern "C" {
     Output_Tuple = 2,
     Set_Tuple = Input_Tuple
   } Argument_Tuple;
-  typedef int coef_t;
+  typedef long long int coef_t;
 
   typedef void DNF;
   typedef void DNF_Iterator;
