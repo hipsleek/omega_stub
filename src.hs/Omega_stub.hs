@@ -1,4 +1,4 @@
-{- $Id: Omega_stub.hs,v 1.7 2003-07-28 09:49:19 raz Exp $ -}
+{- $Id: Omega_stub.hs,v 1.8 2008-12-11 12:54:51 cristian Exp $ -}
 
 module Omega_stub where
 
@@ -26,6 +26,7 @@ type Stride_Handle = Constraint_Handle
 data Variable = Variable
 
 type Argument_Touple = CInt
+type Coef_T = CLLong
 
 data DNF_Iterator = DNF_Iterator
 data EQ_Iterator = EQ_Iterator
@@ -103,8 +104,8 @@ foreign import ccall f_exists_declare :: (Ptr F_Exists) -> CString -> IO (Ptr Va
 foreign import ccall free_var_decl0 :: CString -> IO (Ptr Variable)
 foreign import ccall free_var_decl1 :: CString -> CInt -> IO (Ptr Variable)
 
-foreign import ccall constraint_handler_update_const :: (Ptr Constraint_Handle) -> CInt -> IO ()
-foreign import ccall constraint_handler_update_coef :: (Ptr Constraint_Handle) -> (Ptr Variable) -> CInt -> IO ()
+foreign import ccall constraint_handler_update_const :: (Ptr Constraint_Handle) -> Coef_T -> IO ()
+foreign import ccall constraint_handler_update_coef :: (Ptr Constraint_Handle) -> (Ptr Variable) -> Coef_T -> IO ()
 
 foreign import ccall relation_print :: (Ptr Relation) -> IO ()
 foreign import ccall relation_print_to_file :: (Ptr Relation) -> CInt -> (Ptr CFile) -> IO ()
@@ -208,7 +209,7 @@ foreign import ccall geq_constr_iter_new :: (Ptr GEQ_Iterator) -> IO (Ptr Constr
 --Constr_Vars_Iter* geq_constr_iter_new(GEQ_Iterator* geq);
 
 foreign import ccall constr_iter_get_variable :: (Ptr Constr_Vars_Iter) -> IO (Ptr Variable)
-foreign import ccall constr_iter_get_coef :: (Ptr Constr_Vars_Iter) -> IO (CInt)
+foreign import ccall constr_iter_get_coef :: (Ptr Constr_Vars_Iter) -> IO (Coef_T)
 foreign import ccall constr_iter_next :: (Ptr Constr_Vars_Iter) -> IO ()
 foreign import ccall constr_iter_more :: (Ptr Constr_Vars_Iter) -> IO (Bool)
 --Variable_ID constr_iter_get_variable(Constr_Vars_Iter* cvi);
@@ -225,8 +226,8 @@ foreign import ccall var_iter_get_variable :: (Ptr Variable_Iterator) -> IO (Ptr
 --void var_iter_next(Variable_Iterator* vi);
 --Variable_ID var_iter_get_variable(Variable_Iterator* vi);
 
-foreign import ccall eq_get_const :: (Ptr EQ_Iterator) -> IO (CInt)
-foreign import ccall geq_get_const :: (Ptr EQ_Iterator) -> IO (CInt)
+foreign import ccall eq_get_const :: (Ptr EQ_Iterator) -> IO (Coef_T)
+foreign import ccall geq_get_const :: (Ptr EQ_Iterator) -> IO (Coef_T)
 --int eq_get_const(GEQ_Iterator* eq);
 --int geq_get_const(GEQ_Iterator* qi);
 
