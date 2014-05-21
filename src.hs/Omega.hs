@@ -16,7 +16,7 @@ import Omega_types
 import qualified Omega_stub
 import Omega_parser
 import Prelude hiding ((>),(&&),(||))
-import List
+import Data.List
 import Debug.Trace
 
 build_relation :: Relation -> IO ((Ptr Omega_stub.Relation), RFormula)

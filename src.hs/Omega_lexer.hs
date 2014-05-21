@@ -1,7 +1,7 @@
 module Omega_lexer(omega_lexer) where
 
 import Omega_tokens
-import Char
+import Data.Char
 
 omega_lexer :: String -> [Token]
 omega_lexer [] = []
