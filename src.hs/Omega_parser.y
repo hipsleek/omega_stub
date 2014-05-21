@@ -1,6 +1,6 @@
 {
 module Omega_parser where
-import Char
+import Data.Char
 import Omega_types
 import Omega_tokens
 import Omega_lexer
