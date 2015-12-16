@@ -80,19 +80,6 @@ union_relation (ins1,outs1,rf1) (ins2,outs2,rf2) =
     Omega_stub.relation_delete ptr_union_r >>
   return rf
 
-intersection:: Relation -> Relation -> IO RFormula
-intersection (ins1,outs1,rf1) (ins2,outs2,rf2) =
-  build_relation (ins1,outs1,rf1) >>= \(ptr_r1,f1) ->
-  build_relation (ins2,outs2,rf2) >>= \(ptr_r2,f2) ->
-  eval_relation ptr_r1 f1 >>
-  eval_relation ptr_r2 f2 >>
-  Omega_stub.intersection ptr_r1 ptr_r2 >>= \ptr_intersect_r ->
-    Omega_stub.relation_delete ptr_r1 >>
-    Omega_stub.relation_delete ptr_r2 >>
-  relation_extract_rformula ptr_intersect_r >>= \rf ->
-    Omega_stub.relation_delete ptr_intersect_r >>
-  return rf
-
 composition:: Relation -> Relation -> IO RFormula
 composition (ins1,outs1,rf1) (ins2,outs2,rf2) =
   build_relation (ins1,outs1,rf1) >>= \(ptr_r1,f1) ->
