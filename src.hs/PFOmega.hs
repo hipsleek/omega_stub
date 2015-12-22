@@ -116,6 +116,16 @@ difference (ins1, outs1, rf1) (ins2, outs2, rf2) =
   relation_extract_rformula ptr_diff_r >>= \rf ->
     Omega_stub.relation_delete ptr_diff_r >>
   return rf  
+  
+complement :: Relation -> IO RFormula
+complement (ins1, outs1, rf1) =
+  build_relation (ins1, outs1, rf1) >>= \(ptr_r1, f1) ->
+  eval_relation ptr_r1 f1 >>
+  Omega_stub.complement ptr_r1 >>= \ptr_compl_r ->
+    Omega_stub.relation_delete ptr_r1 >>
+  relation_extract_rformula ptr_compl_r >>= \rf ->
+    Omega_stub.relation_delete ptr_compl_r >>
+  return rf
 
 pairwiseCheck:: Relation -> IO RFormula
 pairwiseCheck (ins,outs,rf) = 
