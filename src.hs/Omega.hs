@@ -9,7 +9,7 @@
 
 module Omega where
 
-import Foreign
+import Foreign (free,Ptr)
 import Foreign.C
 import Omega_util
 import Omega_types

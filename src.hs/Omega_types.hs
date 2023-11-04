@@ -1,6 +1,6 @@
 module Omega_types where
 
-import Foreign
+import Foreign (Ptr,nullPtr)
 import Foreign.C
 import Omega_util
 import qualified Omega_stub
