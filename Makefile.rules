@@ -3,9 +3,13 @@
 CC=g++
 CFLAGS=-DOMIT_QUANTIFY_CALLS -g -Wall -DSIG_HANDLER_HAS_ONE_ARG=1 -DSHUT_UP_ABOUT_STATEMENT_WITH_NO_EFFECT_IN_DYNAMIC_ARRAY_CREATION -Wno-deprecated
 
-BASEDIR=/usr/local
+#BASEDIR=/usr/local
 
-INCS=-I$(BASEDIR)/include/omega -I.
+BASEDIR=/Users/darius/hipsleek/omega_modified/omega_lib/include
+
+#/include/omega
+
+INCS=-I$(BASEDIR) -I/Users/darius/hipsleek/omega_modified/code_gen/include -I/Users/darius/hipsleek/omega_modified/basic/include -I.
 LIBS=-L$(BASEDIR)/lib
 LIB=-lcode_gen -lomega -lm
 
