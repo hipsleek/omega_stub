@@ -4,7 +4,7 @@ all: lib
 #GHC_FLAGS=-prof -fglasgow-exts -fallow-overlapping-instances 
 
 LIB_HS_DIR=../lib.hs
-GHC_FLAGS= -O2 -fglasgow-exts -fallow-overlapping-instances 
+GHC_FLAGS= -O2 -fglasgow-exts -fallow-overlapping-instances -package array
 
 lib:						\
 	$(LIB_HS_DIR)/Omega_util.o		\

@@ -6,6 +6,7 @@ import Omega_tokens
 import Omega_lexer
 import Foreign.Ptr
 import Debug.Trace
+import Control.Monad (ap, liftM)
 }
 
 %name omega_parser
@@ -231,9 +232,16 @@ isDuplicated v (_:v_names) = isDuplicated v v_names
 data St = MkState {cnt :: Integer}
 newtype FS a = FS (St -> (St,a))
 
+instance Functor FS where
+    fmap = liftM
+
+instance Applicative FS where
+    pure a = FS (\st -> (st, a))
+    (<*>) = ap
+
 instance Monad FS where
   -- return :: a -> FS a
-  return a = FS (\st -> (st, a))
+  return a = pure a
   (FS a) >>= f = FS (\st -> let {(st', a') = (a st);(FS b) = (f a')} in b st')
 
 fresh:: FS String
