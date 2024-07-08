@@ -9,7 +9,7 @@ BASEDIR=$(shell pwd)/../../omega_modified/omega_lib/include
 
 #/include/omega
 
-INCS=-I$(BASEDIR) -I$(shell pwd)/../../omega_modified/code_gen/include -I/Users/darius/hipsleek/omega_modified/basic/include -I.
+INCS=-I$(BASEDIR) -I$(shell pwd)/../../omega_modified/code_gen/include -I$(shell pwd)/../../omega_modified/basic/include -I.
 LIBS=-L$(BASEDIR)/lib
 LIB=-lcode_gen -lomega -lm -package array
 
